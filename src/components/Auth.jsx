@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
-import { auth, isMock } from '../firebase';
+import { 
+  auth, 
+  isMock, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from '../firebase';
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
 import { AlertCircle } from 'lucide-react';
 
-export default function Auth({ authInstance }) {
+export default function Auth() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Helper wrappers to handle both Real Firebase SDK and Local Mock environments
+  const executeSignIn = async (emailVal, passwordVal) => {
+    if (isMock) {
+      return await auth.signInWithEmailAndPassword(emailVal, passwordVal);
+    } else {
+      return await signInWithEmailAndPassword(auth, emailVal, passwordVal);
+    }
+  };
+
+  const executeSignUp = async (emailVal, passwordVal) => {
+    if (isMock) {
+      return await auth.createUserWithEmailAndPassword(emailVal, passwordVal);
+    } else {
+      return await createUserWithEmailAndPassword(auth, emailVal, passwordVal);
+    }
+  };
 
   // Passwordless automatic entry flow matching the exact Uiverse HTML inputs
   const handleEmailSubmit = async (e) => {
@@ -21,16 +43,15 @@ export default function Auth({ authInstance }) {
     setIsLoading(true);
 
     try {
-      // ScribeAI signs user in using their email and a standard default password
-      // If the account doesn't exist, it automatically creates it, logging them in instantly!
+      // Attempt login, if not found then register automatically
       try {
-        await authInstance.signInWithEmailAndPassword(email, "default_password_123");
+        await executeSignIn(email, "default_password_123");
       } catch (err) {
-        // Email not found -> create account automatically
-        await authInstance.createUserWithEmailAndPassword(email, "default_password_123");
+        // If sign in fails, attempt registration
+        await executeSignUp(email, "default_password_123");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Auth submit error:", err);
       setError(err.message || "Authentication failed. Please try again.");
     } finally {
       setIsLoading(false);
@@ -44,7 +65,7 @@ export default function Auth({ authInstance }) {
     setIsLoading(true);
     try {
       if (isMock) {
-        await authInstance.signInWithEmailAndPassword("google_user@gmail.com", "default_password_123");
+        await executeSignIn("google_user@gmail.com", "default_password_123");
       } else {
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth, provider);
@@ -63,7 +84,7 @@ export default function Auth({ authInstance }) {
     setIsLoading(true);
     try {
       if (isMock) {
-        await authInstance.signInWithEmailAndPassword("github_user@github.com", "default_password_123");
+        await executeSignIn("github_user@github.com", "default_password_123");
       } else {
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
