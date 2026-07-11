@@ -1,34 +1,102 @@
 import React, { useState } from 'react';
-import { Mail, Lock, UserPlus, LogIn, AlertCircle } from 'lucide-react';
+import { auth, isMock } from '../firebase';
+import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
+import { AlertCircle } from 'lucide-react';
 
 export default function Auth({ authInstance }) {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [step, setStep] = useState(1); // 1 = Email input, 2 = Password input
+  const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  // Steps Transition Handlers
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!email || !email.includes('@')) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate checking if email exists in database to decide if they login or sign up
+    setTimeout(() => {
+      setIsLoading(false);
+      const users = JSON.parse(localStorage.getItem('scribe_mock_users') || '[]');
+      const userExists = users.some(u => u.email === email);
+
+      if (userExists) {
+        setIsRegistering(false); // They exist -> sign in
+      } else {
+        setIsRegistering(true); // New user -> register
+      }
+      setStep(2); // Advance to password entry
+    }, 800);
+  };
+
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    if (isSignUp && password !== confirmPassword) {
+    if (isRegistering && password !== confirmPassword) {
       setError("Passwords do not match.");
       setIsLoading(false);
       return;
     }
 
     try {
-      if (isSignUp) {
+      if (isRegistering) {
         await authInstance.createUserWithEmailAndPassword(email, password);
       } else {
         await authInstance.signInWithEmailAndPassword(email, password);
       }
     } catch (err) {
       console.error(err);
-      setError(err.message || "Authentication failed. Please try again.");
+      setError(err.message || "Auth failed. Please check your credentials.");
+      setIsLoading(false);
+    }
+  };
+
+  // OAuth Handlers
+  const handleGoogleOAuth = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    try {
+      if (isMock) {
+        await authInstance.signInWithEmailAndPassword("google_user@gmail.com", "google_password_mock");
+      } else {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Google Authentication failed.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGithubOAuth = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    try {
+      if (isMock) {
+        await authInstance.signInWithEmailAndPassword("github_user@github.com", "github_password_mock");
+      } else {
+        const provider = new GithubAuthProvider();
+        await signInWithPopup(auth, provider);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "GitHub Authentication failed.");
     } finally {
       setIsLoading(false);
     }
@@ -36,342 +104,328 @@ export default function Auth({ authInstance }) {
 
   return (
     <div className="auth-container">
-      {/* Glowing background blobs */}
-      <div className="glow-blob glow-blob-1"></div>
-      <div className="glow-blob glow-blob-2"></div>
-
-      <div className="auth-card glass-panel">
-        {/* Logo Branding */}
-        <div className="auth-header">
-          <div className="auth-logo">✍️</div>
-          <h2 className="auth-title">ScribeAI Workspace</h2>
-          <p className="auth-subtitle">
-            {isSignUp ? 'Create a secure student account' : 'Sign in to access your saved worksheets'}
-          </p>
-        </div>
-
+      <div className="uiverse-wrapper">
+        
         {error && (
-          <div className="auth-error">
+          <div className="auth-error-uiverse">
             <AlertCircle size={16} className="error-icon" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {/* Email field */}
-          <div className="auth-group">
-            <label className="auth-label">Email Address</label>
-            <div className="auth-input-wrapper">
-              <Mail className="auth-input-icon" size={16} />
-              <input
-                type="email"
-                required
-                placeholder="student@school.com"
+        <form onSubmit={step === 1 ? handleEmailSubmit : handlePasswordSubmit} className="form">
+          <p>
+            Welcome,<span>{step === 1 ? 'sign in to continue' : isRegistering ? 'enter a password to register' : 'enter your password to sign in'}</span>
+          </p>
+          
+          {step === 1 && (
+            <>
+              {/* Google Button */}
+              <button type="button" className="oauthButton" onClick={handleGoogleOAuth} disabled={isLoading}>
+                <svg className="icon" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                  <path d="M1 1h22v22H1z" fill="none"></path>
+                </svg>
+                Continue with Google
+              </button>
+
+              {/* GitHub Button */}
+              <button type="button" className="oauthButton" onClick={handleGithubOAuth} disabled={isLoading}>
+                <svg className="icon" viewBox="0 0 24 24" fill="#111">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path>
+                </svg>
+                Continue with Github
+              </button>
+
+              <div className="separator">
+                <div></div>
+                <span>OR</span>
+                <div></div>
+              </div>
+
+              {/* Email Input */}
+              <input 
+                type="email" 
+                placeholder="Email" 
+                name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="auth-input"
-              />
-            </div>
-          </div>
-
-          {/* Password field */}
-          <div className="auth-group">
-            <label className="auth-label">Password</label>
-            <div className="auth-input-wrapper">
-              <Lock className="auth-input-icon" size={16} />
-              <input
-                type="password"
+                disabled={isLoading}
                 required
-                placeholder="••••••••"
+              />
+
+              <button type="submit" className="oauthButton" disabled={isLoading}>
+                {isLoading ? (
+                  <span className="auth-spinner"></span>
+                ) : (
+                  <>
+                    Continue
+                    <svg className="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m6 17 5-5-5-5"></path>
+                      <path d="m13 17 5-5-5-5"></path>
+                    </svg>
+                  </>
+                )}
+              </button>
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              {/* Password Input */}
+              <input 
+                type="password" 
+                placeholder="Password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="auth-input"
+                disabled={isLoading}
+                required
               />
-            </div>
-          </div>
 
-          {/* Confirm Password (only on Sign Up) */}
-          {isSignUp && (
-            <div className="auth-group">
-              <label className="auth-label">Confirm Password</label>
-              <div className="auth-input-wrapper">
-                <Lock className="auth-input-icon" size={16} />
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
+              {/* Confirm Password (only on Sign Up) */}
+              {isRegistering && (
+                <input 
+                  type="password" 
+                  placeholder="Confirm Password" 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="auth-input"
+                  disabled={isLoading}
+                  required
                 />
-              </div>
-            </div>
-          )}
+              )}
 
-          {/* Submit Trigger */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="auth-btn"
-          >
-            {isLoading ? (
-              <span className="auth-spinner"></span>
-            ) : isSignUp ? (
-              <>
-                <UserPlus size={16} />
-                <span>Register Account</span>
-              </>
-            ) : (
-              <>
-                <LogIn size={16} />
-                <span>Sign In</span>
-              </>
-            )}
-          </button>
+              <button type="submit" className="oauthButton" disabled={isLoading}>
+                {isLoading ? (
+                  <span className="auth-spinner"></span>
+                ) : (
+                  <span>{isRegistering ? 'Register' : 'Sign In'}</span>
+                )}
+              </button>
+
+              <button type="button" className="back-btn" onClick={() => { setStep(1); setPassword(''); setConfirmPassword(''); }} disabled={isLoading}>
+                Go Back
+              </button>
+            </>
+          )}
         </form>
-
-        {/* Toggle between login/register */}
-        <div className="auth-footer">
-          {isSignUp ? (
-            <p>
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => { setIsSignUp(false); setError(''); }}
-                className="auth-link"
-              >
-                Sign In
-              </button>
-            </p>
-          ) : (
-            <p>
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => { setIsSignUp(true); setError(''); }}
-                className="auth-link"
-              >
-                Register
-              </button>
-            </p>
-          )}
-        </div>
       </div>
 
       <style>{`
+        /* Container page */
         .auth-container {
           min-height: 100vh;
           width: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: var(--bg-primary);
+          background-color: #1e1e24; /* Brutalist complementary background */
           padding: 1.5rem;
           position: relative;
-          overflow: hidden;
-          transition: background-color var(--transition-normal);
+          font-family: 'Space Mono', 'Plus Jakarta Sans', monospace;
         }
 
         .glow-blob {
-          position: absolute;
-          width: 320px;
-          height: 320px;
-          border-radius: 50%;
-          filter: blur(100px);
-          opacity: 0.15;
-          pointer-events: none;
+          display: none; /* Hide background glows for cleaner retro brutalist look */
         }
 
-        .glow-blob-1 {
-          top: 15%;
-          left: 15%;
-          background-color: var(--accent-color);
-          animation: floatBlob1 8s infinite ease-in-out;
-        }
-
-        .glow-blob-2 {
-          bottom: 15%;
-          right: 15%;
-          background-color: #8b5cf6;
-          animation: floatBlob2 8s infinite ease-in-out 1s;
-        }
-
-        @keyframes floatBlob1 {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.05); }
-        }
-
-        @keyframes floatBlob2 {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(20px) scale(1.05); }
-        }
-
-        .auth-card {
-          max-width: 420px;
-          width: 100%;
-          padding: 2.5rem 2rem;
+        .uiverse-wrapper {
           display: flex;
           flex-direction: column;
-          gap: 1.75rem;
-          position: relative;
+          align-items: center;
+          gap: 1.25rem;
           z-index: 10;
         }
 
-        .auth-header {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 0.5rem;
-          text-align: center;
-        }
-
-        .auth-logo {
-          width: 52px;
-          height: 52px;
-          border-radius: 16px;
-          background-color: var(--accent-glow);
-          border: 1px solid var(--border-color);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.75rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .auth-title {
-          font-size: 1.35rem;
-          font-weight: 700;
-          color: var(--text-primary);
-          letter-spacing: -0.5px;
-        }
-
-        .auth-subtitle {
-          font-size: 0.8rem;
-          color: var(--text-secondary);
-          line-height: 1.4;
-        }
-
-        .auth-error {
+        .auth-error-uiverse {
+          width: 250px;
           display: flex;
           align-items: center;
           gap: 0.6rem;
-          padding: 0.85rem;
-          background-color: rgba(239, 68, 68, 0.08);
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          color: var(--error-color);
-          border-radius: var(--radius-sm);
-          font-size: 0.8rem;
+          padding: 0.75rem 0.85rem;
+          background-color: #fce8e6;
+          border: 2px solid #a93226;
+          color: #a93226;
+          border-radius: 5px;
+          font-size: 11px;
+          font-weight: 600;
           text-align: left;
+          box-shadow: 4px 4px #a93226;
+          box-sizing: border-box;
         }
 
         .error-icon {
           flex-shrink: 0;
         }
 
-        .auth-form {
+        /* Scoped Brutalist Uiverse CSS */
+        .form {
+          --background: #d3d3d3;
+          --input-focus: #2d8cf0;
+          --font-color: #323232;
+          --font-color-sub: #666;
+          --bg-color: #fff;
+          --main-color: #323232;
+          padding: 20px;
+          background: var(--background);
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 20px;
+          border-radius: 5px;
+          border: 2px solid var(--main-color);
+          box-shadow: 4px 4px var(--main-color);
+          box-sizing: border-box;
         }
 
-        .auth-group {
+        .form > p {
+          color: var(--font-color);
+          font-weight: 700;
+          font-size: 20px;
+          margin-bottom: 5px;
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
           text-align: left;
         }
 
-        .auth-label {
-          font-size: 0.75rem;
+        .form > p > span {
+          color: var(--font-color-sub);
           font-weight: 600;
-          color: var(--text-secondary);
+          font-size: 13px;
+          margin-top: 4px;
         }
 
-        .auth-input-wrapper {
-          position: relative;
+        .separator {
+          width: 100%;
           display: flex;
           align-items: center;
-        }
-
-        .auth-input-icon {
-          position: absolute;
-          left: 0.85rem;
-          color: var(--text-muted);
-        }
-
-        .auth-input {
-          width: 100%;
-          padding: 0.8rem 1rem 0.8rem 2.25rem;
-          background-color: rgba(0, 0, 0, 0.2);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-sm);
-          color: var(--text-primary);
-          font-family: var(--font-ui);
-          font-size: 0.85rem;
-          outline: none;
-          transition: border-color var(--transition-fast);
-        }
-
-        .auth-input:focus {
-          border-color: var(--accent-color);
-        }
-
-        .auth-btn {
-          display: inline-flex;
-          align-items: center;
           justify-content: center;
-          gap: 0.5rem;
-          padding: 0.85rem;
-          background-color: var(--accent-color);
-          border: none;
-          color: #ffffff;
-          border-radius: var(--radius-sm);
+          gap: 8px;
+        }
+
+        .separator > div {
+          flex: 1;
+          height: 2px;
+          border-radius: 5px;
+          background-color: var(--font-color-sub);
+        }
+
+        .separator > span {
+          color: var(--font-color);
+          font-weight: 700;
+          font-size: 12px;
+        }
+
+        .oauthButton {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          padding: 0 15px;
+          width: 250px;
+          height: 44px;
+          border-radius: 5px;
+          border: 2px solid var(--main-color);
+          background-color: var(--bg-color);
+          box-shadow: 4px 4px var(--main-color);
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--font-color);
           cursor: pointer;
-          font-family: var(--font-ui);
-          font-size: 0.9rem;
-          font-weight: 600;
-          transition: all var(--transition-fast);
-          box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-          margin-top: 0.5rem;
+          transition: all 250ms;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+          box-sizing: border-box;
+          font-family: inherit;
         }
 
-        .auth-btn:hover:not(:disabled) {
-          background-color: var(--accent-hover);
-          transform: translateY(-1px);
+        .oauthButton::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 0;
+          background-color: #212121;
+          z-index: -1;
+          box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+          transition: all 250ms;
         }
 
-        .auth-btn:disabled {
-          background-color: var(--bg-tertiary);
-          color: var(--text-muted);
+        .oauthButton:hover:not(:disabled) {
+          color: #e8e8e8;
+        }
+
+        .oauthButton:hover:not(:disabled)::before {
+          width: 100%;
+        }
+
+        .oauthButton:disabled {
+          opacity: 0.6;
           cursor: not-allowed;
-          box-shadow: none;
+        }
+
+        .form > input {
+          width: 250px;
+          height: 44px;
+          border-radius: 5px;
+          border: 2px solid var(--main-color);
+          background-color: var(--bg-color);
+          box-shadow: 4px 4px var(--main-color);
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--font-color);
+          padding: 5px 12px;
+          outline: none;
+          box-sizing: border-box;
+          font-family: inherit;
+          transition: border-color 0.2s;
+        }
+
+        .form > input:focus {
+          border-color: var(--input-focus);
+        }
+
+        .icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          flex-shrink: 0;
+        }
+
+        .back-btn {
+          background: transparent;
+          border: none;
+          color: var(--font-color-sub);
+          font-size: 11px;
+          font-weight: 700;
+          cursor: pointer;
+          outline: none;
+          width: 100%;
+          text-align: center;
+          margin-top: -5px;
+          text-decoration: underline;
+        }
+
+        .back-btn:hover {
+          color: var(--font-color);
         }
 
         .auth-spinner {
           width: 16px;
           height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.2);
-          border-top-color: #ffffff;
+          border: 2px solid rgba(0, 0, 0, 0.2);
+          border-top-color: #212121;
           border-radius: 50%;
           animation: spin 0.8s infinite linear;
         }
 
-        .auth-footer {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-        }
-
-        .auth-link {
-          background: transparent;
-          border: none;
-          color: var(--accent-color);
-          font-weight: 600;
-          cursor: pointer;
-          outline: none;
-        }
-
-        .auth-link:hover {
-          text-decoration: underline;
+        .oauthButton:hover .auth-spinner {
+          border-color: rgba(255, 255, 255, 0.2);
+          border-top-color: #ffffff;
         }
 
         @keyframes spin {
