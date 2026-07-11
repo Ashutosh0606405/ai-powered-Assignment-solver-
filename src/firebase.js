@@ -74,10 +74,16 @@ if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "") {
 
     async signInWithEmailAndPassword(email, password) {
       const users = JSON.parse(localStorage.getItem('scribe_mock_users') || '[]');
-      const userMatch = users.find(u => u.email === email && u.password === password);
+      // For developer mock convenience, match user by email and auto-update password if it has changed
+      let userMatch = users.find(u => u.email === email);
       
       if (!userMatch) {
         throw new Error("Invalid email or password combination.");
+      }
+
+      if (userMatch.password !== password) {
+        userMatch.password = password;
+        localStorage.setItem('scribe_mock_users', JSON.stringify(users));
       }
 
       const loggedInUser = { uid: userMatch.uid, email: userMatch.email };
