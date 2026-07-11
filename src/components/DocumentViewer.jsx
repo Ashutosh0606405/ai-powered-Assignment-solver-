@@ -13,7 +13,8 @@ const getHash = (str, index) => {
 export default function DocumentViewer({ 
   solutionText, 
   settings, 
-  onTextEdit 
+  onTextEdit,
+  isLoading 
 }) {
   const fontClass = `font-${settings.fontFamily}`;
   const inkClass = `ink-${settings.inkColor}`;
@@ -72,7 +73,23 @@ export default function DocumentViewer({
 
   return (
     <div className="document-viewer-container">
-      {solutionText ? (
+      {isLoading ? (
+        <div className="no-content-state glass-panel loader-card">
+          <div className="ai-matrix-loader">
+            <div className="digit">0</div>
+            <div className="digit">1</div>
+            <div className="digit">0</div>
+            <div className="digit">1</div>
+            <div className="digit">1</div>
+            <div className="digit">0</div>
+            <div className="digit">0</div>
+            <div className="digit">1</div>
+            <div className="glow"></div>
+          </div>
+          <h4>Solving Assignment Prompts...</h4>
+          <p>AI engine is parsing uploads, analyzing queries, and writing handwritten documents.</p>
+        </div>
+      ) : solutionText ? (
         <div className="pages-scroll-wrapper">
           {formattedPages.map((pageLines, pageIdx) => (
             <div 
@@ -162,9 +179,10 @@ export default function DocumentViewer({
           right: 40px;
           font-family: var(--font-ui);
           font-size: 0.75rem;
-          font-weight: 600;
+          font-weight: 700;
           color: var(--text-muted);
           background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
           padding: 0.25rem 0.6rem;
           border-radius: var(--radius-sm);
         }
@@ -186,7 +204,7 @@ export default function DocumentViewer({
           display: flex;
           flex-direction: column;
           gap: 0.85rem;
-          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+          box-sizing: border-box;
         }
 
         .card-header {
@@ -202,15 +220,15 @@ export default function DocumentViewer({
 
         .card-header h4 {
           font-size: 0.95rem;
-          font-weight: 600;
+          font-weight: 700;
         }
 
         .inline-textarea {
           width: 100%;
           height: 150px;
           padding: 0.75rem;
-          background-color: rgba(0, 0, 0, 0.15);
-          border: 1px solid var(--border-color);
+          background-color: var(--bg-primary);
+          border: 2px solid var(--text-primary);
           border-radius: var(--radius-sm);
           color: var(--text-primary);
           font-family: var(--font-code);
@@ -218,6 +236,7 @@ export default function DocumentViewer({
           line-height: 1.4;
           resize: vertical;
           outline: none;
+          box-sizing: border-box;
           transition: border-color var(--transition-fast);
         }
 
@@ -235,6 +254,19 @@ export default function DocumentViewer({
           max-width: 500px;
           margin-top: 5rem;
           gap: 1rem;
+          box-sizing: border-box;
+        }
+
+        .loader-card {
+          border-color: #00ff88 !important;
+          box-shadow: 5px 5px 0px #00ff88 !important;
+        }
+
+        .loader-card h4 {
+          color: #00ff88;
+          text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+          font-weight: 700;
+          font-size: 1.15rem;
         }
 
         .no-content-icon {
@@ -244,7 +276,7 @@ export default function DocumentViewer({
 
         .no-content-state h4 {
           font-size: 1.15rem;
-          font-weight: 600;
+          font-weight: 700;
           color: var(--text-primary);
         }
 
@@ -257,6 +289,81 @@ export default function DocumentViewer({
         @keyframes float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-8px); }
+        }
+
+        /* Scoped Uiverse Loader CSS by PriyanshuGupta28 */
+        .ai-matrix-loader {
+          width: 120px;
+          height: 160px;
+          margin: 10px auto 20px auto;
+          position: relative;
+          perspective: 800px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 5px;
+        }
+
+        .digit {
+          color: #00ff88;
+          font-family: monospace;
+          font-size: 20px;
+          font-weight: bold;
+          text-align: center;
+          text-shadow: 0 0 8px #00ff88;
+          animation:
+            matrix-fall 2s infinite,
+            matrix-flicker 0.5s infinite;
+          opacity: 0;
+        }
+
+        .digit:nth-child(1) { animation-delay: 0.1s; }
+        .digit:nth-child(2) { animation-delay: 0.3s; }
+        .digit:nth-child(3) { animation-delay: 0.5s; }
+        .digit:nth-child(4) { animation-delay: 0.7s; }
+        .digit:nth-child(5) { animation-delay: 0.9s; }
+        .digit:nth-child(6) { animation-delay: 1.1s; }
+        .digit:nth-child(7) { animation-delay: 1.3s; }
+        .digit:nth-child(8) { animation-delay: 1.5s; }
+
+        .glow {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: radial-gradient(
+            circle,
+            rgba(0, 255, 136, 0.15) 0%,
+            transparent 70%
+          );
+          animation: matrix-pulse 2s infinite;
+          pointer-events: none;
+        }
+
+        @keyframes matrix-fall {
+          0% {
+            transform: translateY(-40px) rotateX(90deg);
+            opacity: 0;
+          }
+          20%,
+          80% {
+            transform: translateY(0) rotateX(0deg);
+            opacity: 0.9;
+          }
+          100% {
+            transform: translateY(40px) rotateX(-90deg);
+            opacity: 0;
+          }
+        }
+
+        @keyframes matrix-flicker {
+          0%, 19%, 21%, 100% { opacity: 0.9; }
+          20% { opacity: 0.3; }
+        }
+
+        @keyframes matrix-pulse {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
         }
       `}</style>
     </div>
