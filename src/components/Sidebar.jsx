@@ -1,6 +1,5 @@
 import React from 'react';
 import { BookOpen, History, Key, Moon, Sun, LogOut, User } from 'lucide-react';
-import { signOut } from '../firebase';
 
 export default function Sidebar({ 
   activeTab, 
@@ -79,13 +78,14 @@ export default function Sidebar({
         .sidebar-container {
           width: 260px;
           background-color: var(--bg-secondary);
-          border-right: 1px solid var(--border-color);
+          border-right: 2px solid var(--text-primary);
           display: flex;
           flex-direction: column;
           padding: 1.5rem;
           height: 100vh;
           position: sticky;
           top: 0;
+          box-sizing: border-box;
         }
 
         .sidebar-brand {
@@ -111,7 +111,7 @@ export default function Sidebar({
         .sidebar-nav {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.75rem;
           flex: 1;
         }
 
@@ -120,28 +120,41 @@ export default function Sidebar({
           align-items: center;
           gap: 0.75rem;
           padding: 0.85rem 1rem;
-          background: transparent;
-          border: none;
-          color: var(--text-secondary);
+          background: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           border-radius: var(--radius-sm);
           cursor: pointer;
           font-family: var(--font-ui);
-          font-size: 0.95rem;
-          font-weight: 500;
+          font-size: 0.9rem;
+          font-weight: 700;
           text-align: left;
-          transition: all var(--transition-fast);
+          transition: transform 0.1s, box-shadow 0.1s;
           width: 100%;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          box-sizing: border-box;
         }
 
         .nav-item:hover {
-          background-color: var(--bg-tertiary);
-          color: var(--text-primary);
+          transform: translate(-1px, -1px);
+          box-shadow: 4px 4px 0px var(--text-primary);
+        }
+
+        .nav-item:active {
+          transform: translate(2px, 2px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .nav-item.active {
           background-color: var(--accent-color);
           color: #ffffff;
-          box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+          box-shadow: 3px 3px 0px var(--text-primary);
+        }
+
+        .nav-item.active:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 4px 4px 0px var(--text-primary);
+          background-color: var(--accent-hover);
         }
 
         .sidebar-footer {
@@ -149,7 +162,7 @@ export default function Sidebar({
           flex-direction: column;
           gap: 1rem;
           padding-top: 1rem;
-          border-top: 1px solid var(--border-color);
+          border-top: 2px solid var(--text-primary);
         }
 
         .user-profile-badge {
@@ -158,9 +171,11 @@ export default function Sidebar({
           gap: 0.6rem;
           padding: 0.6rem 0.8rem;
           background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
+          border: 2px solid var(--text-primary);
           border-radius: var(--radius-sm);
           min-width: 0;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          box-sizing: border-box;
         }
 
         .profile-icon {
@@ -168,7 +183,8 @@ export default function Sidebar({
           height: 28px;
           border-radius: 50%;
           background-color: var(--accent-glow);
-          color: var(--accent-color);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -182,8 +198,8 @@ export default function Sidebar({
         }
 
         .user-email {
-          font-size: 0.8rem;
-          font-weight: 600;
+          font-size: 0.75rem;
+          font-weight: 700;
           color: var(--text-primary);
           white-space: nowrap;
           overflow: hidden;
@@ -193,6 +209,7 @@ export default function Sidebar({
         .user-role {
           font-size: 0.65rem;
           color: var(--text-muted);
+          font-weight: 600;
         }
 
         .signout-btn {
@@ -205,11 +222,11 @@ export default function Sidebar({
           align-items: center;
           justify-content: center;
           border-radius: 4px;
+          transition: color 0.15s;
         }
 
         .signout-btn:hover {
           color: var(--error-color);
-          background-color: rgba(239, 68, 68, 0.08);
         }
 
         .theme-toggle {
@@ -218,19 +235,27 @@ export default function Sidebar({
           gap: 0.75rem;
           padding: 0.85rem 1rem;
           background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
+          border: 2px solid var(--text-primary);
           color: var(--text-primary);
           border-radius: var(--radius-sm);
           cursor: pointer;
           font-family: var(--font-ui);
-          font-size: 0.9rem;
-          font-weight: 500;
-          transition: all var(--transition-fast);
+          font-size: 0.85rem;
+          font-weight: 700;
+          transition: transform 0.1s, box-shadow 0.1s;
           justify-content: center;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          box-sizing: border-box;
         }
 
         .theme-toggle:hover {
-          background-color: var(--border-color);
+          transform: translate(-1px, -1px);
+          box-shadow: 4px 4px 0px var(--text-primary);
+        }
+
+        .theme-toggle:active {
+          transform: translate(2px, 2px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
       `}</style>
     </aside>

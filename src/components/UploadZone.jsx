@@ -116,9 +116,9 @@ export default function UploadZone({
 
           {!selectedFile ? (
             <div className="dropzone-empty-content">
-              <UploadCloud size={40} className="upload-icon" />
-              <p className="dropzone-text-primary">Drag & drop your homework here</p>
-              <p className="dropzone-text-secondary">Supports JPG, PNG, PDF, or TXT (Max 5MB)</p>
+              <UploadCloud size={36} className="upload-icon" />
+              <p className="dropzone-text-primary">Drag & drop homework</p>
+              <p className="dropzone-text-secondary">JPG, PNG, PDF, or TXT (Max 5MB)</p>
               <button type="button" className="browse-btn">Browse Files</button>
             </div>
           ) : (
@@ -129,7 +129,7 @@ export default function UploadZone({
                 </div>
               ) : (
                 <div className="file-icon-wrapper">
-                  <FileText size={48} className="file-doc-icon" />
+                  <FileText size={24} className="file-doc-icon" />
                 </div>
               )}
               <div className="file-details">
@@ -137,7 +137,7 @@ export default function UploadZone({
                 <p className="file-size">{selectedFile.size}</p>
               </div>
               <button type="button" className="remove-file-btn" onClick={handleRemoveFile} title="Remove file">
-                <X size={16} />
+                <X size={14} />
               </button>
             </div>
           )}
@@ -146,7 +146,7 @@ export default function UploadZone({
         {/* Text prompt text area */}
         <div className="text-prompt-container">
           <label htmlFor="assignment-text-area" className="prompt-label">
-            Or type questions / instructions below:
+            Or type questions below:
           </label>
           <textarea
             id="assignment-text-area"
@@ -160,7 +160,7 @@ export default function UploadZone({
 
         {/* Quick Help / Templates */}
         <div className="samples-container">
-          <span className="samples-label">Try these sample prompts:</span>
+          <span className="samples-label">Try these templates:</span>
           <div className="samples-btn-group">
             <button 
               type="button" 
@@ -168,7 +168,7 @@ export default function UploadZone({
               onClick={() => setSampleInput('math')}
               disabled={isLoading}
             >
-              📐 Math Homework
+              📐 Math HW
             </button>
             <button 
               type="button" 
@@ -176,7 +176,7 @@ export default function UploadZone({
               onClick={() => setSampleInput('history')}
               disabled={isLoading}
             >
-              📜 History Essay
+              📜 Essay
             </button>
           </div>
         </div>
@@ -190,12 +190,12 @@ export default function UploadZone({
           {isLoading ? (
             <>
               <div className="spinner"></div>
-              <span>Scanning & Solving Assignment...</span>
+              <span>Solving Homework...</span>
             </>
           ) : (
             <>
-              <span>Solve & Write Assignment</span>
-              <ArrowRight size={18} />
+              <span>Solve & Write</span>
+              <ArrowRight size={16} />
             </>
           )}
         </button>
@@ -203,53 +203,57 @@ export default function UploadZone({
 
       <style>{`
         .upload-zone-container {
-          padding: 1.75rem;
+          padding: 1.5rem;
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1.25rem;
+          box-sizing: border-box;
         }
 
         .upload-header h3 {
-          font-size: 1.15rem;
-          font-weight: 600;
+          font-size: 1.05rem;
+          font-weight: 700;
           color: var(--text-primary);
           margin-bottom: 0.25rem;
         }
 
         .upload-header .subtitle {
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           color: var(--text-secondary);
         }
 
         .workspace-forms {
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1rem;
         }
 
         .dropzone {
-          border: 2px dashed var(--border-color);
-          border-radius: var(--radius-md);
-          padding: 1.75rem;
+          border: 2px dashed var(--text-primary);
+          border-radius: var(--radius-sm);
+          padding: 1.25rem;
           text-align: center;
           cursor: pointer;
-          background-color: rgba(0, 0, 0, 0.15);
-          transition: all var(--transition-fast);
-          min-height: 180px;
+          background-color: var(--bg-tertiary);
+          transition: transform 0.1s, box-shadow 0.1s;
+          min-height: 140px;
           display: flex;
           align-items: center;
           justify-content: center;
+          box-sizing: border-box;
         }
 
         .dropzone:hover, .dropzone.drag-active {
-          border-color: var(--accent-color);
-          background-color: var(--accent-glow);
+          background-color: var(--bg-primary);
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
         }
 
         .dropzone.has-file {
           border-style: solid;
           cursor: default;
-          background-color: var(--bg-tertiary);
+          background-color: var(--bg-secondary);
+          box-shadow: 2px 2px 0px var(--text-primary);
         }
 
         .file-input-hidden {
@@ -260,60 +264,61 @@ export default function UploadZone({
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.4rem;
         }
 
         .upload-icon {
           color: var(--text-secondary);
-          margin-bottom: 0.25rem;
-          transition: transform var(--transition-normal);
-        }
-
-        .dropzone:hover .upload-icon {
-          transform: translateY(-4px) scale(1.05);
-          color: var(--accent-color);
+          margin-bottom: 0.15rem;
         }
 
         .dropzone-text-primary {
-          font-weight: 600;
-          font-size: 0.95rem;
+          font-weight: 700;
+          font-size: 0.85rem;
           color: var(--text-primary);
         }
 
         .dropzone-text-secondary {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: var(--text-muted);
         }
 
         .browse-btn {
-          margin-top: 0.5rem;
-          padding: 0.4rem 1rem;
-          background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
+          margin-top: 0.4rem;
+          padding: 0.35rem 0.85rem;
+          background-color: var(--bg-secondary);
+          border: 2px solid var(--text-primary);
           color: var(--text-primary);
           border-radius: var(--radius-sm);
-          font-size: 0.8rem;
-          font-weight: 500;
+          font-size: 0.75rem;
+          font-weight: 700;
           cursor: pointer;
-          font-family: var(--font-ui);
+          font-family: inherit;
+          box-shadow: 2px 2px 0px var(--text-primary);
+          transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .browse-btn:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
         }
 
         .dropzone-filled-content {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 0.75rem;
           width: 100%;
           position: relative;
         }
 
         .image-preview-wrapper {
-          width: 50px;
-          height: 50px;
+          width: 44px;
+          height: 44px;
           border-radius: var(--radius-sm);
           overflow: hidden;
           background-color: var(--bg-primary);
           flex-shrink: 0;
-          border: 1px solid var(--border-color);
+          border: 2px solid var(--text-primary);
         }
 
         .image-preview {
@@ -323,8 +328,8 @@ export default function UploadZone({
         }
 
         .file-icon-wrapper {
-          width: 50px;
-          height: 50px;
+          width: 44px;
+          height: 44px;
           border-radius: var(--radius-sm);
           background-color: var(--bg-primary);
           display: flex;
@@ -332,7 +337,7 @@ export default function UploadZone({
           justify-content: center;
           color: var(--accent-color);
           flex-shrink: 0;
-          border: 1px solid var(--border-color);
+          border: 2px solid var(--text-primary);
         }
 
         .file-details {
@@ -342,8 +347,8 @@ export default function UploadZone({
         }
 
         .file-name {
-          font-size: 0.9rem;
-          font-weight: 600;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: var(--text-primary);
           white-space: nowrap;
           overflow: hidden;
@@ -351,55 +356,58 @@ export default function UploadZone({
         }
 
         .file-size {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: var(--text-muted);
           margin-top: 0.1rem;
         }
 
         .remove-file-btn {
-          background: transparent;
-          border: none;
-          color: var(--text-muted);
+          background: var(--bg-primary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           cursor: pointer;
-          padding: 0.35rem;
+          padding: 0.3rem;
           border-radius: 50%;
-          transition: all var(--transition-fast);
+          transition: all 0.15s;
           display: flex;
           align-items: center;
           justify-content: center;
+          box-shadow: 2px 2px 0px var(--text-primary);
         }
 
         .remove-file-btn:hover {
-          background-color: var(--border-color);
-          color: var(--error-color);
+          background-color: var(--error-color);
+          color: #ffffff;
         }
 
         .text-prompt-container {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.4rem;
         }
 
         .prompt-label {
-          font-size: 0.85rem;
-          font-weight: 600;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: var(--text-primary);
+          text-align: left;
         }
 
         .prompt-textarea {
           width: 100%;
-          height: 90px;
-          padding: 0.75rem;
-          background-color: rgba(0, 0, 0, 0.15);
-          border: 1px solid var(--border-color);
+          height: 80px;
+          padding: 0.6rem;
+          background-color: var(--bg-primary);
+          border: 2px solid var(--text-primary);
           border-radius: var(--radius-sm);
           color: var(--text-primary);
-          font-family: var(--font-ui);
-          font-size: 0.9rem;
+          font-family: inherit;
+          font-size: 0.85rem;
           line-height: 1.4;
           resize: none;
           outline: none;
-          transition: border-color var(--transition-fast);
+          box-sizing: border-box;
+          transition: border-color 0.2s;
         }
 
         .prompt-textarea:focus {
@@ -414,13 +422,14 @@ export default function UploadZone({
         .samples-container {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.4rem;
         }
 
         .samples-label {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: var(--text-muted);
-          font-weight: 500;
+          font-weight: 700;
+          text-align: left;
         }
 
         .samples-btn-group {
@@ -429,21 +438,28 @@ export default function UploadZone({
         }
 
         .sample-btn {
-          padding: 0.4rem 0.75rem;
-          background-color: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          color: var(--text-secondary);
+          flex: 1;
+          padding: 0.4rem 0.5rem;
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           border-radius: var(--radius-sm);
-          font-size: 0.8rem;
+          font-size: 0.75rem;
+          font-weight: 700;
           cursor: pointer;
-          transition: all var(--transition-fast);
-          font-family: var(--font-ui);
+          transition: transform 0.1s, box-shadow 0.1s;
+          font-family: inherit;
+          box-shadow: 2px 2px 0px var(--text-primary);
         }
 
         .sample-btn:hover:not(:disabled) {
-          background-color: var(--bg-tertiary);
-          color: var(--text-primary);
-          border-color: var(--accent-color);
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+        }
+
+        .sample-btn:active:not(:disabled) {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .sample-btn:disabled {
@@ -456,22 +472,30 @@ export default function UploadZone({
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          padding: 0.9rem;
-          background: linear-gradient(135deg, var(--accent-color), #7c3aed);
-          border: none;
-          color: #ffffff;
+          padding: 0.85rem;
+          background-color: #fbbf24; /* Bright Retro Yellow */
+          border: 2px solid var(--text-primary);
+          color: #1e1e24; /* High contrast dark text */
           border-radius: var(--radius-sm);
-          font-family: var(--font-ui);
-          font-size: 0.95rem;
-          font-weight: 600;
+          font-family: inherit;
+          font-size: 0.9rem;
+          font-weight: 800;
           cursor: pointer;
-          transition: all var(--transition-fast);
-          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          box-sizing: border-box;
+          width: 100%;
         }
 
         .solve-workspace-btn:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px var(--text-primary);
+          background-color: #f59e0b;
+        }
+
+        .solve-workspace-btn:active:not(:disabled) {
+          transform: translate(2px, 2px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .solve-workspace-btn:disabled {
@@ -480,15 +504,16 @@ export default function UploadZone({
           cursor: not-allowed;
           box-shadow: none;
           opacity: 0.8;
+          transform: none;
         }
 
         .spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-top-color: #ffffff;
+          width: 14px;
+          height: 14px;
+          border: 2px solid rgba(0, 0, 0, 0.15);
+          border-top-color: #1e1e24;
           border-radius: 50%;
-          animation: spin 1s infinite linear;
+          animation: spin 0.8s infinite linear;
         }
 
         @keyframes spin {

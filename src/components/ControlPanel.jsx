@@ -8,16 +8,16 @@ export default function ControlPanel({
   hasContent 
 }) {
   const paperOptions = [
-    { id: 'lined', label: 'Lined Notebook' },
-    { id: 'grid', label: 'Graph / Grid' },
-    { id: 'blank', label: 'Plain Sheet' },
+    { id: 'lined', label: 'Lined' },
+    { id: 'grid', label: 'Graph' },
+    { id: 'blank', label: 'Plain' },
   ];
 
   const fontOptions = [
     { id: 'caveat', label: 'Classic Cursive', class: 'font-caveat' },
     { id: 'indie', label: 'Casual Script', class: 'font-indie' },
     { id: 'architect', label: 'Neat Print', class: 'font-architect' },
-    { id: 'shadows', label: 'Fine Handwriting', class: 'font-shadows' },
+    { id: 'shadows', label: 'Fine Writing', class: 'font-shadows' },
     { id: 'reenie', label: 'Quick Cursive', class: 'font-reenie' },
   ];
 
@@ -93,7 +93,7 @@ export default function ControlPanel({
 
         {/* Handwriting Sliders */}
         <div className="control-section">
-          <h4 className="section-title"><Sliders size={14} /> Natural Variations (Jitter)</h4>
+          <h4 className="section-title"><Sliders size={14} /> Variations (Jitter)</h4>
           
           <div className="slider-group">
             <div className="slider-label-row">
@@ -112,7 +112,7 @@ export default function ControlPanel({
 
           <div className="slider-group">
             <div className="slider-label-row">
-              <span>Line Height (Spacing)</span>
+              <span>Line Height</span>
               <span>{settings.lineHeight}</span>
             </div>
             <input
@@ -142,7 +142,7 @@ export default function ControlPanel({
 
           <div className="slider-group">
             <div className="slider-label-row">
-              <span>Letter Rotation Jitter</span>
+              <span>Rotation Jitter</span>
               <span>{settings.rotationJitter}°</span>
             </div>
             <input
@@ -157,7 +157,7 @@ export default function ControlPanel({
 
           <div className="slider-group">
             <div className="slider-label-row">
-              <span>Vertical Offset Jitter</span>
+              <span>Vertical Jitter</span>
               <span>{settings.verticalJitter}px</span>
             </div>
             <input
@@ -179,55 +179,58 @@ export default function ControlPanel({
             disabled={!hasContent}
           >
             <Printer size={16} />
-            <span>Download PDF / Print</span>
+            <span>Download PDF</span>
           </button>
         </div>
       </div>
 
       <style>{`
         .control-panel-container {
-          padding: 1.75rem;
+          padding: 1.5rem;
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1.25rem;
           height: fit-content;
+          box-sizing: border-box;
         }
 
         .control-panel-container h3 {
-          font-size: 1.15rem;
-          font-weight: 600;
+          font-size: 1.05rem;
+          font-weight: 700;
           color: var(--text-primary);
           margin-bottom: 0.25rem;
+          text-align: left;
         }
 
         .control-panel-container .subtitle {
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           color: var(--text-secondary);
+          text-align: left;
         }
 
         .control-sections {
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1rem;
         }
 
         .control-section {
           display: flex;
           flex-direction: column;
-          gap: 0.6rem;
+          gap: 0.5rem;
         }
 
         .section-title {
-          font-size: 0.85rem;
-          font-weight: 600;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: var(--text-primary);
           display: flex;
           align-items: center;
           gap: 0.4rem;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          border-bottom: 1px solid var(--border-color);
-          padding-bottom: 0.35rem;
+          border-bottom: 2px solid var(--text-primary);
+          padding-bottom: 0.25rem;
+          text-align: left;
         }
 
         .grid-options {
@@ -243,88 +246,97 @@ export default function ControlPanel({
         }
 
         .option-btn {
-          padding: 0.5rem;
-          background-color: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          color: var(--text-secondary);
+          padding: 0.45rem;
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           border-radius: var(--radius-sm);
-          font-size: 0.8rem;
-          font-weight: 500;
+          font-size: 0.75rem;
+          font-weight: 700;
           cursor: pointer;
-          transition: all var(--transition-fast);
-          font-family: var(--font-ui);
+          transition: transform 0.1s, box-shadow 0.1s;
+          font-family: inherit;
           text-align: center;
+          box-shadow: 2px 2px 0px var(--text-primary);
+          box-sizing: border-box;
         }
 
         .option-btn:hover {
-          background-color: var(--bg-tertiary);
-          color: var(--text-primary);
-          border-color: var(--accent-color);
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+        }
+
+        .option-btn:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .option-btn.active {
-          background-color: var(--accent-glow);
-          color: var(--accent-color);
-          border-color: var(--accent-color);
+          background-color: var(--accent-color);
+          color: #ffffff;
+          box-shadow: 2px 2px 0px var(--text-primary);
         }
 
         .font-preview {
           text-align: left;
-          padding: 0.6rem 0.8rem;
-          font-size: 1.15rem;
+          padding: 0.5rem 0.75rem;
+          font-size: 1.1rem;
         }
 
         .ink-options-row {
           display: flex;
-          gap: 0.75rem;
-          padding: 0.25rem 0;
+          gap: 0.6rem;
+          padding: 0.15rem 0;
         }
 
         .ink-circle {
-          width: 32px;
-          height: 32px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
-          border: 2px solid transparent;
+          border: 2px solid var(--text-primary);
           cursor: pointer;
-          transition: all var(--transition-fast);
-          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 2px 2px 0px var(--text-primary);
         }
 
         .ink-circle:hover {
-          transform: scale(1.1);
+          transform: scale(1.1) translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
         }
 
         .ink-circle.active {
-          border-color: var(--text-primary);
           transform: scale(1.15);
+          box-shadow: 0 0 0 2px var(--accent-color), 3px 3px 0px var(--text-primary);
         }
 
         .slider-group {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
-          margin-top: 0.25rem;
+          gap: 0.2rem;
+          margin-top: 0.15rem;
         }
 
         .slider-label-row {
           display: flex;
           justify-content: space-between;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           color: var(--text-secondary);
+          font-weight: 700;
         }
 
         .slider-group input[type="range"] {
           width: 100%;
           accent-color: var(--accent-color);
           cursor: pointer;
-          height: 4px;
-          background: var(--border-color);
-          border-radius: 2px;
+          height: 6px;
+          background: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          border-radius: 4px;
           outline: none;
         }
 
         .actions-section {
-          margin-top: 0.75rem;
+          margin-top: 0.5rem;
         }
 
         .action-btn-primary {
@@ -333,22 +345,29 @@ export default function ControlPanel({
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          padding: 0.85rem;
+          padding: 0.8rem;
           background-color: var(--accent-color);
-          border: none;
+          border: 2px solid var(--text-primary);
           color: #ffffff;
           border-radius: var(--radius-sm);
-          font-family: var(--font-ui);
-          font-size: 0.95rem;
-          font-weight: 600;
+          font-family: inherit;
+          font-size: 0.9rem;
+          font-weight: 800;
           cursor: pointer;
-          transition: all var(--transition-fast);
-          box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          box-sizing: border-box;
         }
 
         .action-btn-primary:hover:not(:disabled) {
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px var(--text-primary);
           background-color: var(--accent-hover);
-          transform: translateY(-1px);
+        }
+
+        .action-btn-primary:active:not(:disabled) {
+          transform: translate(2px, 2px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .action-btn-primary:disabled {
@@ -356,6 +375,7 @@ export default function ControlPanel({
           color: var(--text-muted);
           cursor: not-allowed;
           box-shadow: none;
+          transform: none;
         }
       `}</style>
     </div>
