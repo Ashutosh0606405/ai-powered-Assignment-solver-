@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import UploadZone from './components/UploadZone';
 import ControlPanel from './components/ControlPanel';
 import DocumentViewer from './components/DocumentViewer';
+import ImageToPdfConverter from './components/ImageToPdfConverter';
 import Auth from './components/Auth';
 import { solveAssignment } from './utils/gemini';
 import { auth, db, isMock } from './firebase';
@@ -144,7 +145,7 @@ function App() {
   }
 
   return (
-    <div className="app-container">
+    <div className={`app-container tab-${activeTab}`}>
       {/* Sidebar navigation */}
       <Sidebar 
         activeTab={activeTab} 
@@ -253,9 +254,10 @@ function App() {
           </div>
         )}
 
-
-
-
+        {/* Image to PDF Tab */}
+        {activeTab === 'image-to-pdf' && (
+          <ImageToPdfConverter />
+        )}
       </main>
 
       <style>{`

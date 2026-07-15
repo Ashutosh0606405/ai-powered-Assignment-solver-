@@ -316,4 +316,15 @@ body {
   .notebook-page::after {
     display: none !important;
   }
+
+  /* Hide workspace elements when printing under Image to PDF tab */
+  .tab-image-to-pdf .notebook-page,
+  .tab-image-to-pdf .inline-editor-card {
+    display: none !important;
+  }
+  
+  /* Hide image compiler pages when printing under Workspace tab */
+  .tab-workspace .image-pdf-print-container {
+    display: none !important;
+  }
 }
