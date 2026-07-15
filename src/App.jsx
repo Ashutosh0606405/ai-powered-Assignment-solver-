@@ -4,7 +4,6 @@ import UploadZone from './components/UploadZone';
 import ControlPanel from './components/ControlPanel';
 import DocumentViewer from './components/DocumentViewer';
 import SettingsModal from './components/SettingsModal';
-import HistoryPanel from './components/HistoryPanel';
 import Auth from './components/Auth';
 import { solveAssignment } from './utils/gemini';
 import { auth, db, isMock } from './firebase';
@@ -158,12 +157,10 @@ function App() {
           <div className="header-left">
             <h1>
               {activeTab === 'workspace' && 'Solve Workspace'}
-              {activeTab === 'history' && 'Homework History'}
               {activeTab === 'settings' && 'Configuration'}
             </h1>
             <p className="subtitle-header font-ui">
               {activeTab === 'workspace' && 'Convert questions into elegant hand-written worksheets.'}
-              {activeTab === 'history' && 'Browse, search, and reload previously solved homework assignments.'}
               {activeTab === 'settings' && 'Configure database storage parameters and keys.'}
             </p>
           </div>
@@ -251,13 +248,7 @@ function App() {
           </div>
         )}
 
-        {/* History Panel tab */}
-        {activeTab === 'history' && (
-          <HistoryPanel 
-            user={user} 
-            onLoadDocument={handleLoadDocument} 
-          />
-        )}
+
 
         {/* Settings Configuration tab */}
         {activeTab === 'settings' && (

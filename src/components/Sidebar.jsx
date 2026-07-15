@@ -1,5 +1,4 @@
-import React from 'react';
-import { BookOpen, History, Key, Moon, Sun, LogOut, User } from 'lucide-react';
+import { BookOpen, Key, Moon, Sun, LogOut, User } from 'lucide-react';
 
 export default function Sidebar({ 
   activeTab, 
@@ -11,7 +10,6 @@ export default function Sidebar({
 }) {
   const menuItems = [
     { id: 'workspace', label: 'Workspace', icon: BookOpen },
-    { id: 'history', label: 'History Logs', icon: History },
     { id: 'settings', label: 'API Keys', icon: Key },
   ];
 
