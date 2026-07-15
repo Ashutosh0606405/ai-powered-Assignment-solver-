@@ -1,17 +1,24 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Trash2, ArrowUp, ArrowDown, FileText, Download, Scissors, Combine, Info } from 'lucide-react';
+import { Upload, Trash2, ArrowUp, ArrowDown, FileText, Download, Scissors, Combine, Info, Edit } from 'lucide-react';
 import { PDFDocument } from 'pdf-lib';
+import { solveAssignment, fileToBase64 } from '../utils/gemini';
 
-export default function PdfEditor() {
-  const [activeTool, setActiveTool] = useState('merge'); // 'merge' or 'split'
+export default function PdfEditor({ apiKey, setSolutionText, setActiveTab }) {
+  const [activeTool, setActiveTool] = useState('merge'); // 'merge', 'split', or 'edit'
   const [mergeFiles, setMergeFiles] = useState([]);
   const [splitFile, setSplitFile] = useState(null);
   const [splitRange, setSplitRange] = useState('');
+  
+  // States for the new PDF AI Editor/Handwriting converter
+  const [editFile, setEditFile] = useState(null);
+  const [editInstruction, setEditInstruction] = useState('');
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStatus, setProcessStatus] = useState('');
 
   const mergeInputRef = useRef(null);
   const splitInputRef = useRef(null);
+  const editInputRef = useRef(null);
 
   // Handle PDF Uploads for Merging
   const handleMergeFilesChange = (e) => {
@@ -43,7 +50,7 @@ export default function PdfEditor() {
 
   const moveMergeFile = (index, direction) => {
     if (direction === 'up' && index === 0) return;
-    if (direction === 'down' && index === mergeFiles.length - 1) return;
+    if (direction === 'down' && index === images.length - 1) return;
 
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     const updated = [...mergeFiles];
@@ -59,6 +66,20 @@ export default function PdfEditor() {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
       setSplitFile({
+        name: file.name,
+        size: (file.size / 1024 / 1024).toFixed(2),
+        file: file
+      });
+    } else {
+      alert("Please upload a valid PDF file.");
+    }
+  };
+
+  // Handle PDF Upload for AI Editing/Handwriting
+  const handleEditFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      setEditFile({
         name: file.name,
         size: (file.size / 1024 / 1024).toFixed(2),
         file: file
@@ -181,6 +202,47 @@ export default function PdfEditor() {
     }
   };
 
+  // Perform AI Edit/Rewrite to Handwriting using Gemini
+  const runAiEditPdf = async () => {
+    if (!editFile) {
+      alert("Please upload a typed PDF document first.");
+      return;
+    }
+
+    setIsProcessing(true);
+    setProcessStatus("Analyzing and rewriting document with Gemini...");
+
+    try {
+      // 1. Convert PDF to base64
+      const fileData = await fileToBase64(editFile.file);
+
+      // 2. Formulate prompt instruction
+      const defaultPrompt = "Extract all text content from this typed PDF document and rewrite it as a natural, clean, human-like student homework answer sheet. Simplify paragraphs, expand steps where useful, and ensure it fits a neat handwritten notebook sheet structure.";
+      const prompt = editInstruction.trim() ? editInstruction.trim() : defaultPrompt;
+
+      // 3. Solve using Gemini API
+      const solution = await solveAssignment(
+        {
+          base64: fileData.base64,
+          mimeType: 'application/pdf',
+          name: editFile.name
+        },
+        prompt,
+        apiKey
+      );
+
+      // 4. Load into workspace and switch view
+      setSolutionText(solution);
+      setActiveTab('workspace');
+    } catch (e) {
+      console.error(e);
+      alert(`AI Conversion Error: ${e.message || "Failed to process PDF content. Please check your Gemini connection."}`);
+    } finally {
+      setIsProcessing(false);
+      setProcessStatus('');
+    }
+  };
+
   return (
     <div className="pdf-editor-workspace">
       {/* Left side sidebar selector */}
@@ -191,7 +253,7 @@ export default function PdfEditor() {
           </div>
           <div>
             <h3>PDF Editor</h3>
-            <p className="subtitle">Merge multiple files or extract pages from documents.</p>
+            <p className="subtitle">Merge multiple files, extract pages, or convert typed PDFs to handwriting.</p>
           </div>
         </div>
 
@@ -211,22 +273,29 @@ export default function PdfEditor() {
             <Scissors size={16} />
             <span>Split & Extract Pages</span>
           </button>
+          <button 
+            className={`tool-selector-btn ${activeTool === 'edit' ? 'active' : ''}`}
+            onClick={() => setActiveTool('edit')}
+          >
+            <Edit size={16} />
+            <span>AI Edit to Handwriting</span>
+          </button>
         </div>
 
         {/* Informative Tip */}
         <div className="help-box">
           <Info size={14} className="help-icon" />
           <p>
-            {activeTool === 'merge' 
-              ? "Upload multiple PDFs (e.g. your cover page and solved worksheet) and join them into a single file." 
-              : "Upload a PDF document and specify which page numbers to save. Great for isolating a single solved page."}
+            {activeTool === 'merge' && "Upload multiple PDFs (e.g. your cover page and solved worksheet) and join them into a single file."}
+            {activeTool === 'split' && "Upload a PDF document and specify which page numbers to save. Great for isolating a single solved page."}
+            {activeTool === 'edit' && "Upload a typed PDF document. Gemini AI will analyze its text and automatically rewrite it into a human-like handwritten sheet in your workspace."}
           </p>
         </div>
       </div>
 
       {/* Right side editor interface */}
       <div className="pdf-editor-content">
-        {activeTool === 'merge' ? (
+        {activeTool === 'merge' && (
           /* PDF Merger Interface */
           <div className="editor-tool-panel glass-panel">
             <h4>1. Upload PDF Files to Merge</h4>
@@ -325,7 +394,9 @@ export default function PdfEditor() {
               </div>
             )}
           </div>
-        ) : (
+        )}
+
+        {activeTool === 'split' && (
           /* PDF Page Splitter Interface */
           <div className="editor-tool-panel glass-panel">
             <h4>1. Upload PDF File to Split</h4>
@@ -395,6 +466,81 @@ export default function PdfEditor() {
               <div className="empty-tool-state">
                 <FileText size={40} className="empty-icon" />
                 <p>No PDF uploaded. Upload a document to set splitting ranges.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTool === 'edit' && (
+          /* PDF AI Handwriting Editor Interface */
+          <div className="editor-tool-panel glass-panel">
+            <h4>1. Upload Typed PDF to Convert to Handwriting</h4>
+
+            <div 
+              className="drop-zone-pdf"
+              onClick={() => editInputRef.current.click()}
+            >
+              <Upload size={28} className="upload-icon" />
+              <h5>Select PDF File</h5>
+              <p>Upload a typed or scanned PDF document to handwrite</p>
+              <input 
+                type="file" 
+                ref={editInputRef} 
+                onChange={handleEditFileChange} 
+                accept="application/pdf" 
+                style={{ display: 'none' }}
+              />
+            </div>
+
+            {editFile ? (
+              <div className="split-controls-wrapper">
+                <div className="selected-file-card">
+                  <div className="file-icon-badge">
+                    <FileText size={18} />
+                  </div>
+                  <div className="file-info-col">
+                    <span className="file-title">{editFile.name}</span>
+                    <span className="file-meta">{editFile.size} MB</span>
+                  </div>
+                  <button className="delete-row-btn" onClick={() => setEditFile(null)}>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+
+                <div className="split-range-input-card">
+                  <label className="range-label">Custom Formatting Instruction (Optional)</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. Summarize the text, rewrite neatly, solve the questions..."
+                    value={editInstruction}
+                    onChange={(e) => setEditInstruction(e.target.value)}
+                    className="range-textbox"
+                  />
+                  <span className="range-tip">Leave blank to do a straight conversion, or provide rules for Gemini to edit the text while rewriting.</span>
+                </div>
+
+                <button 
+                  className="execute-btn-brutalist"
+                  onClick={runAiEditPdf}
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? (
+                    <>
+                      <div className="spinner"></div>
+                      <span>{processStatus}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Edit size={18} />
+                      <span>Convert & Edit in Workspace</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="empty-tool-state">
+                <FileText size={40} className="empty-icon" />
+                <p>No PDF uploaded. Add a typed assignment to convert it into human-like handwriting.</p>
               </div>
             )}
           </div>

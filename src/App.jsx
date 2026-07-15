@@ -262,7 +262,11 @@ function App() {
 
         {/* PDF Editor Tab */}
         {activeTab === 'pdf-editor' && (
-          <PdfEditor />
+          <PdfEditor 
+            apiKey={apiKey}
+            setSolutionText={setSolutionText}
+            setActiveTab={setActiveTab}
+          />
         )}
       </main>
 
