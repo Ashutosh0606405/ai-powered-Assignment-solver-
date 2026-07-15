@@ -97,9 +97,11 @@ export default function Sidebar({
         }
 
         .brand-logo-img {
-          width: 32px;
-          height: 32px;
-          object-fit: contain;
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          object-position: center 25%; /* Crop to focus on the blue pen brain, hiding the bottom text */
+          border-radius: 50%; /* Smooth all corners into a perfect circle */
           flex-shrink: 0;
         }
 
