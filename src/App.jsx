@@ -46,7 +46,10 @@ function App() {
     verticalJitter: 1.8,
     studentName: '',
     rollNo: '',
-    assignmentTitle: ''
+    assignmentTitle: '',
+    pageFormat: 'a4',
+    paddingTop: 35,
+    paddingLeft: 90
   });
 
   // Track Firebase/Mock Authentication State

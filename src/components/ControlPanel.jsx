@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Paintbrush, Sliders, Layout, Printer, ChevronRight } from 'lucide-react';
+import { Type, Paintbrush, Sliders, Layout, Printer, ChevronRight, BookOpen, Layers } from 'lucide-react';
 
 export default function ControlPanel({ 
   settings, 
@@ -34,6 +34,47 @@ export default function ControlPanel({
       ...prev,
       [key]: value
     }));
+  };
+
+  // Instantly apply layout configurations based on standard school layouts
+  const applyPreset = (presetType) => {
+    if (presetType === 'math') {
+      setSettings((prev) => ({
+        ...prev,
+        paperStyle: 'grid',
+        fontFamily: 'architect',
+        fontSize: 20,
+        lineHeight: 1.5,
+        wordSpacing: 0.24,
+        rotationJitter: 1.2,
+        verticalJitter: 0.8,
+        inkColor: 'black'
+      }));
+    } else if (presetType === 'essay') {
+      setSettings((prev) => ({
+        ...prev,
+        paperStyle: 'lined',
+        fontFamily: 'caveat',
+        fontSize: 23,
+        lineHeight: 1.7,
+        wordSpacing: 0.28,
+        rotationJitter: 2.4,
+        verticalJitter: 1.8,
+        inkColor: 'blue'
+      }));
+    } else if (presetType === 'lab') {
+      setSettings((prev) => ({
+        ...prev,
+        paperStyle: 'blank',
+        fontFamily: 'indie',
+        fontSize: 21,
+        lineHeight: 1.6,
+        wordSpacing: 0.26,
+        rotationJitter: 1.8,
+        verticalJitter: 1.2,
+        inkColor: 'green'
+      }));
+    }
   };
 
   return (
@@ -77,6 +118,86 @@ export default function ControlPanel({
               value={settings.assignmentTitle || ''}
               onChange={(e) => updateSetting('assignmentTitle', e.target.value)}
               placeholder="e.g. Assignment - 03"
+            />
+          </div>
+        </div>
+
+        {/* Subject Presets */}
+        <div className="control-section">
+          <h4 className="section-title"><BookOpen size={14} /> Subject Presets</h4>
+          <div className="presets-row">
+            <button 
+              type="button" 
+              className="preset-btn"
+              onClick={() => applyPreset('math')}
+              title="Graph paper, neat print, black ink"
+            >
+              📐 Math HW
+            </button>
+            <button 
+              type="button" 
+              className="preset-btn"
+              onClick={() => applyPreset('essay')}
+              title="Lined paper, cursive font, blue ink"
+            >
+              📜 Essay
+            </button>
+            <button 
+              type="button" 
+              className="preset-btn"
+              onClick={() => applyPreset('lab')}
+              title="Plain paper, casual script, green ink"
+            >
+              🔬 Lab Report
+            </button>
+          </div>
+        </div>
+
+        {/* Paper Calibration Format & Size */}
+        <div className="control-section">
+          <h4 className="section-title"><Layers size={14} /> Paper Format</h4>
+          <div className="grid-options">
+            <button
+              className={`option-btn ${settings.pageFormat === 'a4' ? 'active' : ''}`}
+              onClick={() => updateSetting('pageFormat', 'a4')}
+            >
+              A4 Format
+            </button>
+            <button
+              className={`option-btn ${settings.pageFormat === 'letter' ? 'active' : ''}`}
+              onClick={() => updateSetting('pageFormat', 'letter')}
+            >
+              Letter Size
+            </button>
+          </div>
+
+          <div className="slider-group mt-2">
+            <div className="slider-label-row">
+              <span>Top Margin</span>
+              <span>{settings.paddingTop}px</span>
+            </div>
+            <input
+              type="range"
+              min="10"
+              max="120"
+              step="5"
+              value={settings.paddingTop}
+              onChange={(e) => updateSetting('paddingTop', parseInt(e.target.value))}
+            />
+          </div>
+
+          <div className="slider-group">
+            <div className="slider-label-row">
+              <span>Left Margin</span>
+              <span>{settings.paddingLeft}px</span>
+            </div>
+            <input
+              type="range"
+              min="40"
+              max="140"
+              step="5"
+              value={settings.paddingLeft}
+              onChange={(e) => updateSetting('paddingLeft', parseInt(e.target.value))}
             />
           </div>
         </div>
@@ -324,6 +445,41 @@ export default function ControlPanel({
           border-color: var(--accent-color);
         }
 
+        .presets-row {
+          display: flex;
+          gap: 0.35rem;
+          width: 100%;
+        }
+
+        .preset-btn {
+          flex: 1;
+          padding: 0.5rem 0.25rem;
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
+          border-radius: var(--radius-sm);
+          font-size: 0.7rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform 0.1s, box-shadow 0.1s;
+          font-family: inherit;
+          text-align: center;
+          box-shadow: 2px 2px 0px var(--text-primary);
+          box-sizing: border-box;
+          white-space: nowrap;
+        }
+
+        .preset-btn:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+          background-color: var(--bg-secondary);
+        }
+
+        .preset-btn:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
+        }
+
         .section-title {
           font-size: 0.8rem;
           font-weight: 700;
@@ -339,8 +495,13 @@ export default function ControlPanel({
 
         .grid-options {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 0.4rem;
+        }
+
+        /* 3-column layout override for style choices */
+        .control-section:nth-of-type(4) .grid-options {
+          grid-template-columns: repeat(3, 1fr);
         }
 
         .list-options {
@@ -480,6 +641,10 @@ export default function ControlPanel({
           cursor: not-allowed;
           box-shadow: none;
           transform: none;
+        }
+
+        .mt-2 {
+          margin-top: 0.5rem;
         }
       `}</style>
     </div>

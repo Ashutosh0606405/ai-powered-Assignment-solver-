@@ -166,12 +166,12 @@ body {
   background-attachment: local;
 }
 
-/* Red Vertical Margin Line - starts exactly below the horizontal header margin */
+/* Red Vertical Margin Line - starts exactly below horizontal margin and offsets dynamically with left margin */
 .notebook-page.paper-lined::before {
   content: '';
   position: absolute;
   top: var(--paper-padding-top, 135px);
-  left: 75px; /* Vertical line spacing */
+  left: calc(var(--paper-padding-left, 90px) - 15px); /* Position 15px to the left of the text content */
   bottom: 0;
   width: 2px;
   background-color: rgba(231, 76, 60, 0.5); /* Lighter red */
@@ -316,8 +316,7 @@ body {
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
-    padding: 35px 60px 60px 90px !important; /* Keep original notebook padding margins for header alignment */
-    width: 100% !important;
+    /* Maintain inline custom padding and width dimensions set by user settings */
     min-height: auto !important;
     page-break-after: always;
     background-color: #ffffff !important;

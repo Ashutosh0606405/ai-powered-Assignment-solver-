@@ -10,6 +10,159 @@ const getHash = (str, index) => {
   return Math.abs(hash);
 };
 
+// Hand-Drawn SVG Node Graph Diagram Component
+function HandDrawnGraph({ spec, settings }) {
+  const fontClass = `font-${settings.fontFamily}`;
+  const inkClass = `ink-${settings.inkColor}`;
+  
+  // Parse edges: e.g. "A-B:4, B-C:10"
+  const edges = useMemo(() => {
+    try {
+      return spec.split(',').map(item => {
+        const parts = item.trim().split(':');
+        const link = parts[0].trim().split('-');
+        return {
+          from: link[0].trim(),
+          to: link[1].trim(),
+          weight: parts[1] ? parts[1].trim() : ''
+        };
+      });
+    } catch (e) {
+      console.error("Error parsing graph spec:", e);
+      return [];
+    }
+  }, [spec]);
+
+  // Collect unique nodes
+  const nodes = useMemo(() => {
+    const unique = new Set();
+    edges.forEach(e => {
+      unique.add(e.from);
+      unique.add(e.to);
+    });
+    return Array.from(unique).sort();
+  }, [edges]);
+
+  // Circle layout positions
+  const positions = useMemo(() => {
+    const coords = {};
+    const center = { x: 250, y: 110 };
+    const radiusX = 140;
+    const radiusY = 70;
+    nodes.forEach((node, idx) => {
+      const theta = (idx * 2 * Math.PI) / nodes.length - Math.PI / 2;
+      coords[node] = {
+        x: Math.round(center.x + Math.cos(theta) * radiusX),
+        y: Math.round(center.y + Math.sin(theta) * radiusY)
+      };
+    });
+    return coords;
+  }, [nodes]);
+
+  if (edges.length === 0) return null;
+
+  return (
+    <div className={`hand-drawn-graph ${fontClass} ${inkClass}`}>
+      <svg width="100%" height="220" viewBox="0 0 500 220" style={{ overflow: 'visible' }}>
+        <defs>
+          {/* Warp filter to displace straight vectors into hand-drawn sketches */}
+          <filter id="sketch-wobble" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+
+        {/* Draw Edges */}
+        <g filter="url(#sketch-wobble)">
+          {edges.map((edge, idx) => {
+            const p1 = positions[edge.from];
+            const p2 = positions[edge.to];
+            if (!p1 || !p2) return null;
+
+            return (
+              <line
+                key={`edge-${idx}`}
+                x1={p1.x}
+                y1={p1.y}
+                x2={p2.x}
+                y2={p2.y}
+                stroke="currentColor"
+                strokeWidth="2.5"
+                opacity="0.8"
+              />
+            );
+          })}
+        </g>
+
+        {/* Draw Edge Weights */}
+        {edges.map((edge, idx) => {
+          const p1 = positions[edge.from];
+          const p2 = positions[edge.to];
+          if (!p1 || !p2 || !edge.weight) return null;
+
+          const midX = (p1.x + p2.x) / 2;
+          const midY = (p1.y + p2.y) / 2 - 8;
+
+          return (
+            <g key={`weight-group-${idx}`} filter="url(#sketch-wobble)">
+              <rect
+                x={midX - 10}
+                y={midY - 11}
+                width="20"
+                height="18"
+                fill="#fffdf6"
+                rx="3"
+                opacity="0.9"
+              />
+              <text
+                x={midX}
+                y={midY + 2}
+                textAnchor="middle"
+                fontSize="14"
+                fontWeight="bold"
+                fill="currentColor"
+              >
+                {edge.weight}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Draw Nodes */}
+        <g filter="url(#sketch-wobble)">
+          {nodes.map((node) => {
+            const pos = positions[node];
+            if (!pos) return null;
+
+            return (
+              <g key={`node-${node}`} className="node-group">
+                <circle
+                  cx={pos.x}
+                  cy={pos.y}
+                  r="18"
+                  fill="#fffdf6"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                />
+                <text
+                  x={pos.x}
+                  y={pos.y + 5}
+                  textAnchor="middle"
+                  fontSize="16"
+                  fontWeight="bold"
+                  fill="currentColor"
+                >
+                  {node}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function DocumentViewer({ 
   solutionText, 
   settings, 
@@ -24,42 +177,54 @@ export default function DocumentViewer({
 
     const lines = solutionText.split('\n');
     return lines.map((line, lineIndex) => {
-      const words = line.trim() === '' ? [] : line.split(/\s+/);
-      
-      const processedWords = words.map((word, wordIndex) => {
-        const hashRot = getHash(word, lineIndex + wordIndex);
-        const hashY = getHash(word, lineIndex + wordIndex + 100);
-        const hashGap = getHash(word, lineIndex + wordIndex + 200);
+      // Check if it is a graph spec block
+      const isGraph = line.trim().startsWith('[graph:') && line.trim().endsWith(']');
+      let graphSpec = null;
+      let processedWords = [];
 
-        const rot = settings.rotationJitter > 0
-          ? ((hashRot % 100) / 100) * (settings.rotationJitter * 2) - settings.rotationJitter
-          : 0;
+      if (isGraph) {
+        graphSpec = line.trim().substring(7, line.trim().length - 1);
+      } else {
+        const words = line.trim() === '' ? [] : line.split(/\s+/);
+        processedWords = words.map((word, wordIndex) => {
+          const hashRot = getHash(word, lineIndex + wordIndex);
+          const hashY = getHash(word, lineIndex + wordIndex + 100);
+          const hashGap = getHash(word, lineIndex + wordIndex + 200);
 
-        const yOffset = settings.verticalJitter > 0
-          ? ((hashY % 100) / 100) * (settings.verticalJitter * 2) - settings.verticalJitter
-          : 0;
+          const rot = settings.rotationJitter > 0
+            ? ((hashRot % 100) / 100) * (settings.rotationJitter * 2) - settings.rotationJitter
+            : 0;
 
-        const wordGap = settings.wordSpacing + ((hashGap % 50) / 500);
+          const yOffset = settings.verticalJitter > 0
+            ? ((hashY % 100) / 100) * (settings.verticalJitter * 2) - settings.verticalJitter
+            : 0;
 
-        return {
-          text: word,
-          rot: rot.toFixed(2),
-          yOffset: yOffset.toFixed(2),
-          gap: wordGap.toFixed(3)
-        };
-      });
+          const wordGap = settings.wordSpacing + ((hashGap % 50) / 500);
+
+          return {
+            text: word,
+            rot: rot.toFixed(2),
+            yOffset: yOffset.toFixed(2),
+            gap: wordGap.toFixed(3)
+          };
+        });
+      }
 
       return {
         isEmpty: line.trim() === '',
+        isGraph,
+        graphSpec,
         words: processedWords
       };
     });
   }, [solutionText, settings.rotationJitter, settings.verticalJitter, settings.wordSpacing]);
 
-  // Determine dynamic metal spiral rings based on page length
+  // Determine dynamic spiral rings based on page length
   const spiralRingsCount = useMemo(() => {
-    return Math.max(28, formattedLines.length + 6);
+    return Math.max(28, formattedLines.length + 8);
   }, [formattedLines]);
+
+  const headerOffset = settings.paddingTop + 100;
 
   return (
     <div className="document-viewer-container">
@@ -86,12 +251,14 @@ export default function DocumentViewer({
             style={{
               fontSize: `${settings.fontSize}px`,
               lineHeight: settings.lineHeight,
-              paddingTop: '35px',
-              paddingLeft: settings.paperStyle === 'lined' ? '90px' : '60px',
+              paddingTop: `${settings.paddingTop}px`,
+              paddingLeft: `${settings.paddingLeft}px`,
               '--line-height-px': `${settings.fontSize * settings.lineHeight}px`,
-              '--paper-padding-top': '135px',
-              height: 'auto',
-              minHeight: '297mm'
+              '--paper-padding-top': `${headerOffset}px`,
+              '--paper-padding-left': `${settings.paddingLeft}px`,
+              width: settings.pageFormat === 'letter' ? '215.9mm' : '210mm',
+              minHeight: settings.pageFormat === 'letter' ? '279.4mm' : '297mm',
+              height: 'auto'
             }}
           >
             {/* Hyper-realistic Spiral Binding Rings Overlay */}
@@ -128,8 +295,16 @@ export default function DocumentViewer({
 
             <div className="handwritten-content">
               {formattedLines.map((line, lineIdx) => {
+                if (line.isGraph) {
+                  return (
+                    <div key={lineIdx} className="notebook-graph-container">
+                      <HandDrawnGraph spec={line.graphSpec} settings={settings} />
+                    </div>
+                  );
+                }
+
                 if (line.isEmpty) {
-                  return <div key={lineIdx} className="blank-line" style={{ height: `${settings.fontSize * settings.lineHeight}px` }} />;
+                  return <div key={lineIdx} className="blank-line" style={{ height: 'var(--line-height-px, 32px)' }} />;
                 }
 
                 return (
@@ -209,8 +384,8 @@ export default function DocumentViewer({
         /* Spiral Binder Layout */
         .spiral-binder {
           position: absolute;
-          top: 135px; /* Align with blue lines */
-          left: 20px;
+          top: var(--paper-padding-top, 135px);
+          left: 20px; /* Fixed safe margin on page edge */
           display: flex;
           flex-direction: column;
           z-index: 15;
@@ -308,6 +483,25 @@ export default function DocumentViewer({
           width: 100%;
           position: relative;
           z-index: 5;
+        }
+
+        /* Hand-drawn graph styles */
+        .notebook-graph-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          margin: 25px 0;
+          z-index: 10;
+          position: relative;
+        }
+
+        .hand-drawn-graph {
+          width: 100%;
+          max-width: 500px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         .inline-editor-card {

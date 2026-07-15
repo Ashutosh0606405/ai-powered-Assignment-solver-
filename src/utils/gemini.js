@@ -52,6 +52,10 @@ export const solveAssignment = async (fileInfo, textPrompt, apiKey) => {
       4. Solve the questions step-by-step, explaining the reasoning clearly in a warm, student-friendly, human-like hand-written style.
       5. Keep equations simple and linear (e.g., "x^2 + 2x + 1 = 0" rather than complex LaTeX math blocks). Use standard symbols (+, -, *, /, =).
       6. Break long paragraphs into natural, shorter blocks to mimic hand-written pages.
+      7. If the assignment involves a graph or network diagram (e.g., node connections, spanning trees, weights), you can render a beautiful hand-drawn diagram in the page by outputting a custom graph tag on its own line:
+         [graph: Node1-Node2:Weight, Node2-Node3:Weight, ...]
+         For example: [graph: A-B:4, B-C:10, C-A:3, B-D:4, D-C:2, C-E:6, D-E:1]
+         Only use node names that are simple letters (A, B, C, D, E etc.) or short words, and keep weights numeric.
     `;
 
     parts.push({ text: systemInstruction });
@@ -124,7 +128,41 @@ File Status: Successfully Scanned & Transformed.
 `;
       }
 
-      if (query.includes('math') || query.includes('solve') || query.includes('x =') || query.includes('equation')) {
+      if (query.includes('graph') || query.includes('prim') || query.includes('spanning') || query.includes('tree') || query.includes('mst')) {
+        response += `Minimum Spanning Tree Solver
+
+Question: Consider the following Graph G and obtain the Minimum Spanning Tree (MST) using Prim's Algorithm.
+
+[graph: A-B:4, B-C:10, C-A:3, B-D:4, D-C:2, C-E:6, D-E:1]
+
+Step-by-Step Solution:
+1. Start from vertex A.
+   - Edges connected to A: A-B (weight 4) and A-C (weight 3).
+   - Choose the minimum weight edge: A-C (weight 3).
+   - Vertices in tree: {A, C}.
+
+2. Next, look at all edges connecting {A, C} to external nodes:
+   - Edges: A-B (4), C-B (10), C-D (2), C-E (6).
+   - Choose the minimum weight edge: C-D (weight 2).
+   - Vertices in tree: {A, C, D}.
+
+3. Next, look at all edges connecting {A, C, D} to external nodes:
+   - Edges: A-B (4), D-E (1), C-E (6).
+   - Choose the minimum weight edge: D-E (weight 1).
+   - Vertices in tree: {A, C, D, E}.
+
+4. Next, look at all edges connecting {A, C, D, E} to external nodes:
+   - Edges: A-B (4), D-B (4).
+   - Choose A-B (weight 4) to include node B.
+   - Vertices in tree: {A, B, C, D, E}.
+
+All nodes are connected.
+The total cost of the Minimum Spanning Tree is:
+3 + 2 + 1 + 4 = 10.
+
+Final MST Edges:
+A-C (3), C-D (2), D-E (1), A-B (4).`;
+      } else if (query.includes('math') || query.includes('solve') || query.includes('x =') || query.includes('equation')) {
         response += `Algebra Assignment Solution
 
 Question 1: Solve the quadratic equation x^2 - 5x + 6 = 0.
