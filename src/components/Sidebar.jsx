@@ -97,23 +97,23 @@ export default function Sidebar({
         }
 
         .brand-logo-img {
-          width: 56px;
-          height: 56px;
+          width: 96px;
+          height: 96px;
           object-fit: cover;
           object-position: center 25%; /* Focus on the graphic pen emblem, hiding the text */
           border-radius: 50%;
-          border: 2.5px solid var(--text-primary);
-          box-shadow: 3px 3px 0px var(--text-primary);
+          border: 3px solid var(--text-primary);
+          box-shadow: 4px 4px 0px var(--text-primary);
           background-color: #ffffff; /* White background to pop the blue elements */
-          padding: 2px;
+          padding: 3px;
           box-sizing: border-box;
           flex-shrink: 0;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
         }
 
         .brand-logo-img:hover {
-          transform: scale(1.05) rotate(5deg);
-          box-shadow: 4px 4px 0px var(--text-primary);
+          transform: scale(1.05) rotate(3deg);
+          box-shadow: 5px 5px 0px var(--text-primary);
         }
 
         .sidebar-brand h2 {
