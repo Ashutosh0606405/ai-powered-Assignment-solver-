@@ -118,7 +118,7 @@ export default function Auth() {
         }} 
       />
 
-      {/* Top Professional Announcement Badge */}
+      {/* Top Announcement Badge */}
       <div className="top-badge">
         <span className="sparkle">✨</span>
         <span>ScribeAI v2.0 Workspace Active</span>
@@ -171,6 +171,37 @@ export default function Auth() {
         <circle cx="18" cy="5" r="1.5" fill="currentColor" />
         <circle cx="12" cy="11" r="1.5" fill="currentColor" />
         <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+      </svg>
+
+      {/* 8. Math Variables Doodle (x, y, z) */}
+      <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-8">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="18" fontWeight="bold" fill="currentColor">x, y, z</text>
+      </svg>
+
+      {/* 9. Derivative Math Doodle (dy/dx) */}
+      <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-9">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">dy/dx</text>
+      </svg>
+
+      {/* 10. Math Limit Doodle (lim n→∞) */}
+      <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-10">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="14" fontWeight="bold" fill="currentColor">lim(n→∞)</text>
+      </svg>
+
+      {/* 11. Math Summation Sigma Doodle */}
+      <svg viewBox="0 0 60 60" className="bg-doodle bg-doodle-11">
+        <text x="5" y="45" fontFamily="'Space Mono', monospace" fontSize="32" fontWeight="bold" fill="currentColor">∑</text>
+        <text x="32" y="30" fontFamily="'Space Mono', monospace" fontSize="12" fontWeight="bold" fill="currentColor">n</text>
+      </svg>
+
+      {/* 12. Constant Pi Doodle (π ≈ 3.14) */}
+      <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-12">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">π ≈ 3.14</text>
+      </svg>
+
+      {/* 13. Imaginary Unit Doodle (√-1 = i) */}
+      <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-13">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">√-1 = i</text>
       </svg>
 
       <div className="uiverse-wrapper">
@@ -260,10 +291,10 @@ export default function Auth() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          background-color: #121214;
+          background-color: #0c0c0e; /* Darker charcoal for stronger contrast */
           background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
           background-size: 30px 30px;
           padding: 3rem 1.5rem;
           position: relative;
@@ -277,7 +308,7 @@ export default function Auth() {
           position: absolute;
           width: 500px;
           height: 500px;
-          background: radial-gradient(circle, rgba(129, 140, 248, 0.07) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(129, 140, 248, 0.06) 0%, transparent 70%);
           border-radius: 50%;
           transform: translate(-50%, -50%);
           pointer-events: none;
@@ -290,13 +321,13 @@ export default function Auth() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem 1rem;
-          background-color: #1c1c1f;
-          border: 2px solid #f4f4f7;
+          background-color: #121214;
+          border: 2px solid #323232;
           border-radius: 30px;
           font-size: 11px;
           font-weight: 700;
-          color: #f4f4f7;
-          box-shadow: 3px 3px 0px #f4f4f7;
+          color: #a1a1aa;
+          box-shadow: 3px 3px 0px #323232;
           margin-bottom: 2.5rem;
           z-index: 10;
           pointer-events: none;
@@ -308,33 +339,41 @@ export default function Auth() {
         }
 
         .top-badge .divider-dot {
-          color: #71717a;
+          color: #52525b;
         }
 
         .top-badge .badge-tech {
           color: #818cf8;
         }
 
-        /* Floating background assignment/doodle items */
+        /* Darken the icons/doodles in the background for a premium watermark look */
         .bg-doodle {
           position: absolute;
-          color: rgba(255, 255, 255, 0.035);
+          color: #030304; /* Dark shadow silhouette lines */
+          opacity: 0.85;
           pointer-events: none;
           z-index: 1;
           animation: floatDoodle 8s infinite ease-in-out;
         }
 
-        .bg-doodle-1 { top: 12%; left: 8%; width: 70px; height: 70px; transform: rotate(-12deg); animation-delay: 0.2s; }
-        .bg-doodle-2 { top: 15%; right: 8%; width: 140px; height: 50px; transform: rotate(15deg); animation-delay: 1.5s; }
-        .bg-doodle-3 { bottom: 12%; left: 10%; width: 80px; height: 80px; transform: rotate(20deg); animation-delay: 0.8s; }
-        .bg-doodle-4 { bottom: 18%; right: 8%; width: 70px; height: 70px; transform: rotate(-35deg); animation-delay: 2.2s; }
+        .bg-doodle-1 { top: 10%; left: 8%; width: 70px; height: 70px; transform: rotate(-12deg); animation-delay: 0.2s; }
+        .bg-doodle-2 { top: 14%; right: 7%; width: 140px; height: 50px; transform: rotate(15deg); animation-delay: 1.5s; }
+        .bg-doodle-3 { bottom: 10%; left: 10%; width: 80px; height: 80px; transform: rotate(20deg); animation-delay: 0.8s; }
+        .bg-doodle-4 { bottom: 16%; right: 8%; width: 70px; height: 70px; transform: rotate(-35deg); animation-delay: 2.2s; }
         .bg-doodle-5 { top: 45%; left: 4%; width: 85px; height: 85px; transform: rotate(8deg); animation-delay: 1.1s; }
         .bg-doodle-6 { bottom: 42%; right: 4%; width: 50px; height: 100px; transform: rotate(-10deg); animation-delay: 2.8s; }
-        .bg-doodle-7 { bottom: 10%; left: 45%; width: 75px; height: 75px; transform: rotate(-5deg); animation-delay: 1.9s; }
+        .bg-doodle-7 { bottom: 8%; left: 45%; width: 75px; height: 75px; transform: rotate(-5deg); animation-delay: 1.9s; }
+        
+        .bg-doodle-8 { top: 32%; left: 24%; width: 70px; height: 30px; transform: rotate(-15deg); animation-delay: 0.5s; }
+        .bg-doodle-9 { top: 72%; right: 26%; width: 70px; height: 30px; transform: rotate(25deg); animation-delay: 1.2s; }
+        .bg-doodle-10 { bottom: 28%; left: 28%; width: 90px; height: 30px; transform: rotate(10deg); animation-delay: 2.4s; }
+        .bg-doodle-11 { top: 58%; right: 22%; width: 50px; height: 50px; transform: rotate(-8deg); animation-delay: 1.7s; }
+        .bg-doodle-12 { top: 22%; right: 36%; width: 90px; height: 30px; transform: rotate(5deg); animation-delay: 3.1s; }
+        .bg-doodle-13 { bottom: 18%; right: 44%; width: 80px; height: 30px; transform: rotate(-20deg); animation-delay: 0.9s; }
 
         @keyframes floatDoodle {
           0%, 100% { transform: translateY(0) rotate(var(--rot-base, 0deg)); }
-          50% { transform: translateY(-10px) rotate(var(--rot-base, 0deg)); }
+          50% { transform: translateY(-8px) rotate(var(--rot-base, 0deg)); }
         }
 
         /* Scoped adjustments to inject rotation parameters for keys */
@@ -345,6 +384,12 @@ export default function Auth() {
         .bg-doodle-5 { --rot-base: 8deg; }
         .bg-doodle-6 { --rot-base: -10deg; }
         .bg-doodle-7 { --rot-base: -5deg; }
+        .bg-doodle-8 { --rot-base: -15deg; }
+        .bg-doodle-9 { --rot-base: 25deg; }
+        .bg-doodle-10 { --rot-base: 10deg; }
+        .bg-doodle-11 { --rot-base: -8deg; }
+        .bg-doodle-12 { --rot-base: 5deg; }
+        .bg-doodle-13 { --rot-base: -20deg; }
 
         .uiverse-wrapper {
           display: flex;
@@ -535,7 +580,7 @@ export default function Auth() {
 
         .auth-footer-saas p {
           font-size: 11px;
-          color: #71717a;
+          color: #52525b;
           font-weight: 600;
           margin-bottom: 0.35rem;
         }
@@ -546,14 +591,14 @@ export default function Auth() {
           justify-content: center;
           gap: 0.5rem;
           font-size: 10px;
-          color: #a1a1aa;
+          color: #71717a;
           font-weight: 700;
           letter-spacing: 0.5px;
           text-transform: uppercase;
         }
 
         .footer-dot {
-          color: #71717a;
+          color: #3f3f46;
         }
 
         .help-link {
