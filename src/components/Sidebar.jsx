@@ -100,12 +100,6 @@ export default function Sidebar({
           width: 32px;
           height: 32px;
           object-fit: contain;
-          border-radius: 6px;
-          background-color: #ffffff; /* White card backing to pop the logo details */
-          padding: 2px;
-          border: 2px solid var(--text-primary);
-          box-shadow: 2px 2px 0px var(--text-primary);
-          box-sizing: border-box;
           flex-shrink: 0;
         }
 
