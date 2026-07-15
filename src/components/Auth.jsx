@@ -291,7 +291,7 @@ export default function Auth() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          background-color: #0c0c0e; /* Darker charcoal for stronger contrast */
+          background-color: #0c0c0e;
           background-image: 
             linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
@@ -346,11 +346,11 @@ export default function Auth() {
           color: #818cf8;
         }
 
-        /* Darken the icons/doodles in the background for a premium watermark look */
+        /* Style background doodles to look like glowing white chalk lines on a slate board */
         .bg-doodle {
           position: absolute;
-          color: #030304; /* Dark shadow silhouette lines */
-          opacity: 0.85;
+          color: #ffffff; /* Faint white chalk lines */
+          opacity: 0.12; /* Soft visible glow */
           pointer-events: none;
           z-index: 1;
           animation: floatDoodle 8s infinite ease-in-out;
