@@ -19,16 +19,11 @@ export default function DocumentViewer({
   const fontClass = `font-${settings.fontFamily}`;
   const inkClass = `ink-${settings.inkColor}`;
 
-  const formattedPages = useMemo(() => {
+  const formattedLines = useMemo(() => {
     if (!solutionText) return [];
 
     const lines = solutionText.split('\n');
-    // Align with dynamic notebook spacing
-    const linesPerPage = 20; 
-    const pages = [];
-    let currentLines = [];
-
-    lines.forEach((line, lineIndex) => {
+    return lines.map((line, lineIndex) => {
       const words = line.trim() === '' ? [] : line.split(/\s+/);
       
       const processedWords = words.map((word, wordIndex) => {
@@ -54,23 +49,17 @@ export default function DocumentViewer({
         };
       });
 
-      currentLines.push({
+      return {
         isEmpty: line.trim() === '',
         words: processedWords
-      });
-
-      if (currentLines.length >= linesPerPage) {
-        pages.push(currentLines);
-        currentLines = [];
-      }
+      };
     });
-
-    if (currentLines.length > 0 || pages.length === 0) {
-      pages.push(currentLines);
-    }
-
-    return pages;
   }, [solutionText, settings.rotationJitter, settings.verticalJitter, settings.wordSpacing]);
+
+  // Determine dynamic metal spiral rings based on page length
+  const spiralRingsCount = useMemo(() => {
+    return Math.max(28, formattedLines.length + 6);
+  }, [formattedLines]);
 
   return (
     <div className="document-viewer-container">
@@ -92,67 +81,77 @@ export default function DocumentViewer({
         </div>
       ) : solutionText ? (
         <div className="pages-scroll-wrapper">
-          {formattedPages.map((pageLines, pageIdx) => (
-            <div 
-              key={pageIdx} 
-              className={`notebook-page paper-${settings.paperStyle} ${fontClass} ${inkClass}`}
-              style={{
-                fontSize: `${settings.fontSize}px`,
-                lineHeight: settings.lineHeight,
-                paddingTop: '35px',
-                paddingLeft: settings.paperStyle === 'lined' ? '90px' : '60px',
-                '--line-height-px': `${settings.fontSize * settings.lineHeight}px`,
-                '--paper-padding-top': '135px'
-              }}
-            >
-              {/* Top Notebook Header Block */}
-              <div className="notebook-header-block">
-                <div className="header-box-left">
-                  <div>Nome: <span className="handwritten-val">{settings.studentName || 'Khushboo'}</span></div>
-                  <div>Roll no: <span className="handwritten-val">{settings.rollNo || '2401730080'}</span></div>
-                </div>
-                <div className="header-box-right">
-                  <div>Date: <span className="handwritten-val">__/__/____</span></div>
-                  <div>Page: <span className="handwritten-val">{String(pageIdx + 1).padStart(2, '0')}</span></div>
-                </div>
+          <div 
+            className={`notebook-page paper-${settings.paperStyle} ${fontClass} ${inkClass}`}
+            style={{
+              fontSize: `${settings.fontSize}px`,
+              lineHeight: settings.lineHeight,
+              paddingTop: '35px',
+              paddingLeft: settings.paperStyle === 'lined' ? '90px' : '60px',
+              '--line-height-px': `${settings.fontSize * settings.lineHeight}px`,
+              '--paper-padding-top': '135px',
+              height: 'auto',
+              minHeight: '297mm'
+            }}
+          >
+            {/* Hyper-realistic Spiral Binding Rings Overlay */}
+            {settings.paperStyle === 'lined' && (
+              <div className="spiral-binder">
+                {Array.from({ length: spiralRingsCount }).map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className="spiral-ring"
+                    style={{ height: 'var(--line-height-px, 32px)' }}
+                  />
+                ))}
               </div>
+            )}
 
-              {/* Assignment Title (Only on page 1) */}
-              {pageIdx === 0 && settings.assignmentTitle && (
-                <div className="notebook-assignment-title">
-                  {settings.assignmentTitle}
-                </div>
-              )}
-
-              <div className="page-number no-print">Page {pageIdx + 1}</div>
-
-              <div className="handwritten-content">
-                {pageLines.map((line, lineIdx) => {
-                  if (line.isEmpty) {
-                    return <div key={lineIdx} className="blank-line" style={{ height: `${settings.fontSize * settings.lineHeight}px` }} />;
-                  }
-
-                  return (
-                    <div key={lineIdx} className="handwritten-line">
-                      {line.words.map((word, wordIdx) => (
-                        <span 
-                          key={wordIdx} 
-                          className="word-span"
-                          style={{
-                            '--rot': `${word.rot}deg`,
-                            '--y-offset': `${word.yOffset}px`,
-                            '--word-gap': `${word.gap}em`
-                          }}
-                        >
-                          {word.text}
-                        </span>
-                      ))}
-                    </div>
-                  );
-                })}
+            {/* Top Notebook Header Block */}
+            <div className="notebook-header-block">
+              <div className="header-box-left">
+                <div>Nome: <span className="handwritten-val">{settings.studentName || 'Khushboo'}</span></div>
+                <div>Roll no: <span className="handwritten-val">{settings.rollNo || '2401730080'}</span></div>
+              </div>
+              <div className="header-box-right">
+                <div>Date: <span className="handwritten-val">__/__/____</span></div>
+                <div>Page: <span className="handwritten-val">01</span></div>
               </div>
             </div>
-          ))}
+
+            {/* Assignment Title */}
+            {settings.assignmentTitle && (
+              <div className="notebook-assignment-title">
+                {settings.assignmentTitle}
+              </div>
+            )}
+
+            <div className="handwritten-content">
+              {formattedLines.map((line, lineIdx) => {
+                if (line.isEmpty) {
+                  return <div key={lineIdx} className="blank-line" style={{ height: `${settings.fontSize * settings.lineHeight}px` }} />;
+                }
+
+                return (
+                  <div key={lineIdx} className="handwritten-line">
+                    {line.words.map((word, wordIdx) => (
+                      <span 
+                        key={wordIdx} 
+                        className="word-span"
+                        style={{
+                          '--rot': `${word.rot}deg`,
+                          '--y-offset': `${word.yOffset}px`,
+                          '--word-gap': `${word.gap}em`
+                        }}
+                      >
+                        {word.text}
+                      </span>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Quick inline text editor overlay */}
           <div className="inline-editor-card glass-panel no-print">
@@ -196,20 +195,6 @@ export default function DocumentViewer({
           width: 100%;
         }
 
-        .page-number {
-          position: absolute;
-          top: 30px;
-          right: 40px;
-          font-family: var(--font-ui);
-          font-size: 0.75rem;
-          font-weight: 700;
-          color: var(--text-muted);
-          background-color: var(--bg-tertiary);
-          border: 2px solid var(--text-primary);
-          padding: 0.25rem 0.6rem;
-          border-radius: var(--radius-sm);
-        }
-
         .handwritten-line {
           min-height: 1.6em;
           display: flex;
@@ -221,12 +206,58 @@ export default function DocumentViewer({
           width: 100%;
         }
 
+        /* Spiral Binder Layout */
+        .spiral-binder {
+          position: absolute;
+          top: 135px; /* Align with blue lines */
+          left: 20px;
+          display: flex;
+          flex-direction: column;
+          z-index: 15;
+          pointer-events: none;
+        }
+
+        .spiral-ring {
+          width: 32px;
+          position: relative;
+        }
+
+        /* Slanted metallic loop */
+        .spiral-ring::after {
+          content: '';
+          position: absolute;
+          top: -2px;
+          left: 0;
+          width: 32px;
+          height: 12px;
+          border: 2px solid #555555;
+          border-radius: 50% / 100%;
+          border-bottom: none;
+          border-left: none;
+          transform: rotate(-25deg);
+          background: linear-gradient(135deg, #f0f0f0 0%, #a1a1a1 50%, #444444 100%);
+          box-shadow: 1px 2px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Hole punch shadow in paper */
+        .spiral-ring::before {
+          content: '';
+          position: absolute;
+          top: 2px;
+          left: 28px;
+          width: 8px;
+          height: 8px;
+          background-color: #1a1a1a;
+          border-radius: 50%;
+          opacity: 0.85;
+        }
+
         .notebook-header-block {
           display: flex;
           justify-content: space-between;
           width: 100%;
           margin-bottom: 20px;
-          border-bottom: 2px solid rgba(231, 76, 60, 0.45); /* Red horizontal margin line */
+          border-bottom: 2px solid rgba(231, 76, 60, 0.45);
           padding-bottom: 12px;
           font-family: inherit;
           box-sizing: border-box;

@@ -43,8 +43,8 @@ function App() {
     fontSize: 21,
     lineHeight: 1.6,
     wordSpacing: 0.28,
-    rotationJitter: 1.5,
-    verticalJitter: 1.0,
+    rotationJitter: 2.2,
+    verticalJitter: 1.8,
     studentName: 'Khushboo',
     rollNo: '2401730080',
     assignmentTitle: 'Assignment - 03'

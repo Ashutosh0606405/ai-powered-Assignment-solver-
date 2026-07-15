@@ -142,7 +142,7 @@ body {
 .notebook-page {
   position: relative;
   width: 210mm; /* A4 width */
-  min-height: 297mm; /* A4 height */
+  min-height: 297mm; /* Minimum A4 height, grows dynamically */
   background-color: #fffdf6; /* Off-white warm paper tone */
   border: 2px solid var(--text-primary);
   box-shadow: 8px 8px 0px var(--text-primary);
@@ -151,7 +151,7 @@ body {
   font-size: 21px;
   line-height: 1.6;
   color: var(--ink-blue);
-  overflow: hidden;
+  overflow: visible; /* Prevent text clipping on single sheet */
   box-sizing: border-box;
   margin-bottom: 2rem;
 }
