@@ -1,8 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Trash2, ArrowUp, ArrowDown, Plus, FileImage, Printer, AlertCircle } from 'lucide-react';
+import { Upload, Trash2, ArrowUp, ArrowDown, FileImage, Download, RotateCw, AlertCircle, Layers } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 
 export default function ImageToPdfConverter() {
   const [images, setImages] = useState([]);
+  const [fitMode, setFitMode] = useState('fit'); // 'fit' or 'fill'
+  const [pageFormat, setPageFormat] = useState('a4'); // 'a4' or 'letter'
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [compileProgress, setCompileProgress] = useState('');
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -23,6 +28,7 @@ export default function ImageToPdfConverter() {
       name: file.name,
       size: (file.size / 1024 / 1024).toFixed(2), // Convert to MB
       url: URL.createObjectURL(file),
+      rotation: 0, // Initial rotation is 0 degrees
       file: file
     }));
 
@@ -32,11 +38,19 @@ export default function ImageToPdfConverter() {
   const removeImage = (id) => {
     setImages(prev => {
       const filtered = prev.filter(img => img.id !== id);
-      // Revoke URL to prevent memory leaks
       const removed = prev.find(img => img.id === id);
       if (removed) URL.revokeObjectURL(removed.url);
       return filtered;
     });
+  };
+
+  const rotateImage = (id) => {
+    setImages(prev => prev.map(img => {
+      if (img.id === id) {
+        return { ...img, rotation: (img.rotation + 90) % 360 };
+      }
+      return img;
+    }));
   };
 
   const moveImage = (index, direction) => {
@@ -66,9 +80,98 @@ export default function ImageToPdfConverter() {
     addFiles(files);
   };
 
-  const generatePdf = () => {
+  // Helper to rotate, crop, and convert image to optimized JPEG base64 URL
+  const processImageCanvas = (imgObj) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = imgObj.url;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const rotation = imgObj.rotation || 0;
+
+        // Determine canvas size based on rotation
+        if (rotation === 90 || rotation === 270) {
+          canvas.width = img.naturalHeight;
+          canvas.height = img.naturalWidth;
+        } else {
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+        }
+
+        // Draw rotated image
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+        // Export as compressed JPEG
+        const base64Data = canvas.toDataURL('image/jpeg', 0.85);
+        resolve({
+          dataUrl: base64Data,
+          width: canvas.width,
+          height: canvas.height
+        });
+      };
+    });
+  };
+
+  const compileAndDownloadPdf = async () => {
     if (images.length === 0) return;
-    window.print();
+    setIsCompiling(true);
+
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: pageFormat
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      for (let i = 0; i < images.length; i++) {
+        setCompileProgress(`Processing page ${i + 1} of ${images.length}...`);
+        
+        if (i > 0) {
+          doc.addPage();
+        }
+
+        const processed = await processImageCanvas(images[i]);
+
+        let drawW = pageWidth;
+        let drawH = pageHeight;
+        let dx = 0;
+        let dy = 0;
+
+        if (fitMode === 'fit') {
+          const pageRatio = pageWidth / pageHeight;
+          const imgRatio = processed.width / processed.height;
+
+          if (imgRatio > pageRatio) {
+            // Image is wider than page
+            drawW = pageWidth;
+            drawH = pageWidth / imgRatio;
+            dy = (pageHeight - drawH) / 2;
+          } else {
+            // Image is taller than page
+            drawH = pageHeight;
+            drawW = pageHeight * imgRatio;
+            dx = (pageWidth - drawW) / 2;
+          }
+        }
+
+        doc.addImage(processed.dataUrl, 'JPEG', dx, dy, drawW, drawH, undefined, 'FAST');
+      }
+
+      setCompileProgress("Saving PDF file...");
+      doc.save('compiled_homework_assignment.pdf');
+    } catch (e) {
+      console.error(e);
+      alert("An error occurred during PDF compilation.");
+    } finally {
+      setIsCompiling(false);
+      setCompileProgress('');
+    }
   };
 
   return (
@@ -81,6 +184,51 @@ export default function ImageToPdfConverter() {
           <div>
             <h3>Image to PDF Compiler</h3>
             <p className="subtitle">Compile photos of your physical homework pages into a single PDF document.</p>
+          </div>
+        </div>
+
+        {/* Settings Card Row */}
+        <div className="compiler-settings-row">
+          <div className="settings-field">
+            <label className="section-title"><Layers size={12} /> Paper Size</label>
+            <div className="inline-presets">
+              <button 
+                type="button" 
+                className={`preset-btn ${pageFormat === 'a4' ? 'active' : ''}`}
+                onClick={() => setPageFormat('a4')}
+              >
+                A4 Paper
+              </button>
+              <button 
+                type="button" 
+                className={`preset-btn ${pageFormat === 'letter' ? 'active' : ''}`}
+                onClick={() => setPageFormat('letter')}
+              >
+                Letter Size
+              </button>
+            </div>
+          </div>
+
+          <div className="settings-field">
+            <label className="section-title">🖼️ Image Fit Mode</label>
+            <div className="inline-presets">
+              <button 
+                type="button" 
+                className={`preset-btn ${fitMode === 'fit' ? 'active' : ''}`}
+                onClick={() => setFitMode('fit')}
+                title="Fit image inside pages maintaining original proportions"
+              >
+                Fit Page
+              </button>
+              <button 
+                type="button" 
+                className={`preset-btn ${fitMode === 'fill' ? 'active' : ''}`}
+                onClick={() => setFitMode('fill')}
+                title="Stretch or cover the page fully"
+              >
+                Fill Page
+              </button>
+            </div>
           </div>
         </div>
 
@@ -119,7 +267,11 @@ export default function ImageToPdfConverter() {
                   <div className="page-badge-index">{idx + 1}</div>
                   
                   <div className="preview-thumbnail">
-                    <img src={img.url} alt={img.name} />
+                    <img 
+                      src={img.url} 
+                      alt={img.name} 
+                      style={{ transform: `rotate(${img.rotation}deg)` }}
+                    />
                   </div>
                   
                   <div className="file-details">
@@ -128,6 +280,13 @@ export default function ImageToPdfConverter() {
                   </div>
 
                   <div className="action-buttons-group">
+                    <button 
+                      className="rotate-btn"
+                      onClick={() => rotateImage(img.id)}
+                      title="Rotate 90° Clockwise"
+                    >
+                      <RotateCw size={14} />
+                    </button>
                     <button 
                       className="sort-btn"
                       onClick={() => moveImage(idx, 'up')}
@@ -160,12 +319,25 @@ export default function ImageToPdfConverter() {
             <div className="action-footer">
               <div className="warning-banner">
                 <AlertCircle size={16} className="warning-icon" />
-                <span>Make sure page scale is set to 'Fit to page' in browser print settings.</span>
+                <span>PDF will download directly to your device without using the print dialog.</span>
               </div>
 
-              <button className="compiler-btn-primary" onClick={generatePdf}>
-                <Printer size={18} />
-                <span>Create & Download PDF</span>
+              <button 
+                className="compiler-btn-primary" 
+                onClick={compileAndDownloadPdf}
+                disabled={isCompiling}
+              >
+                {isCompiling ? (
+                  <>
+                    <div className="spinner-loader"></div>
+                    <span>{compileProgress}</span>
+                  </>
+                ) : (
+                  <>
+                    <Download size={18} />
+                    <span>Create & Download PDF</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -175,15 +347,6 @@ export default function ImageToPdfConverter() {
             <p>No photos uploaded yet. Upload snaps of your worksheets to start compiling.</p>
           </div>
         )}
-      </div>
-
-      {/* Hidden Print Container */}
-      <div className="image-pdf-print-container print-only">
-        {images.map((img, idx) => (
-          <div key={img.id} className="print-image-page">
-            <img src={img.url} alt={`Page ${idx + 1}`} />
-          </div>
-        ))}
       </div>
 
       <style>{`
@@ -237,6 +400,59 @@ export default function ImageToPdfConverter() {
         .converter-header .subtitle {
           font-size: 0.8rem;
           color: var(--text-secondary);
+        }
+
+        .compiler-settings-row {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+          text-align: left;
+        }
+
+        .settings-field {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .section-title {
+          font-size: 0.75rem;
+          font-weight: 850;
+          color: var(--text-secondary);
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          text-transform: uppercase;
+        }
+
+        .inline-presets {
+          display: flex;
+          gap: 0.4rem;
+        }
+
+        .preset-btn {
+          flex: 1;
+          padding: 0.45rem;
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
+          border-radius: var(--radius-sm);
+          font-size: 0.75rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 2px 2px 0px var(--text-primary);
+        }
+
+        .preset-btn:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+          background-color: var(--bg-secondary);
+        }
+
+        .preset-btn.active {
+          background-color: var(--accent-color);
+          color: #ffffff;
         }
 
         .drop-zone-brutalist {
@@ -358,6 +574,7 @@ export default function ImageToPdfConverter() {
           max-width: 100%;
           max-height: 100%;
           object-fit: cover;
+          transition: transform 0.15s ease;
         }
 
         .file-details {
@@ -388,7 +605,7 @@ export default function ImageToPdfConverter() {
           flex-shrink: 0;
         }
 
-        .sort-btn, .delete-row-btn {
+        .rotate-btn, .sort-btn, .delete-row-btn {
           background-color: var(--bg-primary);
           border: 2px solid var(--text-primary);
           color: var(--text-primary);
@@ -401,12 +618,12 @@ export default function ImageToPdfConverter() {
           transition: transform 0.1s, box-shadow 0.1s;
         }
 
-        .sort-btn:hover:not(:disabled), .delete-row-btn:hover {
+        .rotate-btn:hover, .sort-btn:hover:not(:disabled), .delete-row-btn:hover {
           transform: translate(-1px, -1px);
           box-shadow: 2px 2px 0px var(--text-primary);
         }
 
-        .sort-btn:active:not(:disabled), .delete-row-btn:active {
+        .rotate-btn:active, .sort-btn:active:not(:disabled), .delete-row-btn:active {
           transform: translate(1px, 1px);
           box-shadow: none;
         }
@@ -432,17 +649,13 @@ export default function ImageToPdfConverter() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.6rem 0.8rem;
-          background-color: rgba(251, 191, 36, 0.15);
-          border: 2px solid var(--warning-color);
+          background-color: rgba(52, 211, 153, 0.1);
+          border: 2px solid var(--success-color);
           border-radius: var(--radius-sm);
-          color: var(--warning-color);
+          color: var(--success-color);
           font-size: 0.75rem;
           font-weight: 700;
           text-align: left;
-        }
-
-        .warning-icon {
-          flex-shrink: 0;
         }
 
         .compiler-btn-primary {
@@ -465,15 +678,36 @@ export default function ImageToPdfConverter() {
           box-sizing: border-box;
         }
 
-        .compiler-btn-primary:hover {
+        .compiler-btn-primary:hover:not(:disabled) {
           transform: translate(-1.5px, -1.5px);
           box-shadow: 5.5px 5.5px 0px var(--text-primary);
           background-color: var(--accent-hover);
         }
 
-        .compiler-btn-primary:active {
+        .compiler-btn-primary:active:not(:disabled) {
           transform: translate(2px, 2px);
           box-shadow: 1px 1px 0px var(--text-primary);
+        }
+
+        .compiler-btn-primary:disabled {
+          background-color: var(--bg-tertiary);
+          color: var(--text-muted);
+          cursor: not-allowed;
+          box-shadow: none;
+          transform: none;
+        }
+
+        .spinner-loader {
+          width: 14px;
+          height: 14px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: #ffffff;
+          animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
 
         .empty-uploader-state {
@@ -495,40 +729,6 @@ export default function ImageToPdfConverter() {
           font-size: 0.8rem;
           color: var(--text-secondary);
           max-width: 320px;
-        }
-
-        .image-pdf-print-container {
-          display: none;
-        }
-
-        /* Print formatting styles */
-        @media print {
-          .image-pdf-print-container {
-            display: block !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            background-color: #ffffff !important;
-          }
-          
-          .print-image-page {
-            page-break-after: always !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            box-sizing: border-box !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-
-          .print-image-page img {
-            max-width: 100% !important;
-            max-height: 100% !important;
-            object-fit: contain !important;
-            display: block !important;
-          }
         }
       `}</style>
     </div>
