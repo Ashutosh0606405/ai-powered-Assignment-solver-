@@ -151,7 +151,7 @@ body {
   font-size: 21px;
   line-height: 1.6;
   color: var(--ink-blue);
-  overflow: visible; /* Prevent text clipping on single sheet */
+  overflow: hidden; /* Cleanly clip overflowing elements like spiral loops */
   box-sizing: border-box;
   margin-bottom: 2rem;
 }
@@ -177,28 +177,6 @@ body {
   background-color: rgba(231, 76, 60, 0.5); /* Lighter red */
   z-index: 1;
   pointer-events: none;
-}
-
-/* Ring Binder Holes on the Left */
-.notebook-page.paper-lined::after {
-  content: '';
-  position: absolute;
-  top: 40px;
-  left: 25px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--bg-primary);
-  border: 2px solid var(--text-primary);
-  box-shadow: 
-    0 150px 0 0 var(--bg-primary),
-    0 300px 0 0 var(--bg-primary),
-    0 450px 0 0 var(--bg-primary),
-    0 600px 0 0 var(--bg-primary),
-    0 750px 0 0 var(--bg-primary);
-  z-index: 2;
-  pointer-events: none;
-  transition: background-color var(--transition-normal);
 }
 
 /* Grid/Graph paper style */
