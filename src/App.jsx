@@ -3,7 +3,6 @@ import Sidebar from './components/Sidebar';
 import UploadZone from './components/UploadZone';
 import ControlPanel from './components/ControlPanel';
 import DocumentViewer from './components/DocumentViewer';
-import SettingsModal from './components/SettingsModal';
 import Auth from './components/Auth';
 import { solveAssignment } from './utils/gemini';
 import { auth, db, isMock } from './firebase';
@@ -169,12 +168,12 @@ function App() {
           </div>
           <div className="header-right">
             {isMock ? (
-              <div className="api-badge warning" onClick={() => setActiveTab('settings')}>
+              <div className="api-badge warning">
                 <span className="dot"></span>
                 <span>Demo (Mock Solver Active)</span>
               </div>
             ) : (
-              <div className="api-badge success" onClick={() => setActiveTab('settings')}>
+              <div className="api-badge success">
                 <span className="dot"></span>
                 <span>Gemini API Live</span>
               </div>
@@ -253,15 +252,7 @@ function App() {
 
 
 
-        {/* Settings Configuration tab */}
-        {activeTab === 'settings' && (
-          <SettingsModal 
-            apiKey={apiKey} 
-            setApiKey={setApiKey} 
-            model={model} 
-            setModel={setModel} 
-          />
-        )}
+
       </main>
 
       <style>{`
@@ -297,16 +288,9 @@ function App() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.4rem 0.8rem;
-          border-radius: var(--radius-circle);
+          border-radius: 20px;
           font-size: 0.75rem;
           font-weight: 600;
-          cursor: pointer;
-          border-radius: 20px;
-          transition: transform var(--transition-fast);
-        }
-
-        .api-badge:hover {
-          transform: translateY(-1px);
         }
 
         .api-badge.warning {

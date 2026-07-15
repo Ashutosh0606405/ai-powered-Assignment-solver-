@@ -1,4 +1,4 @@
-import { BookOpen, Key, Moon, Sun, LogOut, User } from 'lucide-react';
+import { BookOpen, Moon, Sun, LogOut, User } from 'lucide-react';
 
 export default function Sidebar({ 
   activeTab, 
@@ -10,7 +10,6 @@ export default function Sidebar({
 }) {
   const menuItems = [
     { id: 'workspace', label: 'Workspace', icon: BookOpen },
-    { id: 'settings', label: 'API Keys', icon: Key },
   ];
 
   const handleSignOut = async () => {
