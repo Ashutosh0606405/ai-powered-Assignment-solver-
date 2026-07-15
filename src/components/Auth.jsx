@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   auth, 
   isMock, 
@@ -6,12 +6,22 @@ import {
   createUserWithEmailAndPassword 
 } from '../firebase';
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, HelpCircle } from 'lucide-react';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Mouse move listener to update coordinates for ambient cursor glow
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // Helper wrappers to handle both Real Firebase SDK and Local Mock environments
   const executeSignIn = async (emailVal, passwordVal) => {
@@ -99,6 +109,23 @@ export default function Auth() {
 
   return (
     <div className="auth-container">
+      {/* Dynamic Cursor Light Overlay */}
+      <div 
+        className="mouse-glow" 
+        style={{ 
+          left: `${mousePos.x}px`, 
+          top: `${mousePos.y}px` 
+        }} 
+      />
+
+      {/* Top Professional Announcement Badge */}
+      <div className="top-badge">
+        <span className="sparkle">✨</span>
+        <span>ScribeAI v2.0 Workspace Active</span>
+        <span className="divider-dot">•</span>
+        <span className="badge-tech">Gemini 2.5 & Firestore Connected</span>
+      </div>
+
       {/* 1. Document Checklist Doodle */}
       <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-1" fill="none" stroke="currentColor">
         <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5" />
@@ -212,45 +239,102 @@ export default function Auth() {
         </form>
       </div>
 
+      {/* Professional SaaS Footer */}
+      <footer className="auth-footer-saas">
+        <p>ScribeAI © {new Date().getFullYear()}. Built for students worldwide.</p>
+        <div className="footer-links">
+          <span>Terms</span>
+          <span className="footer-dot">•</span>
+          <span>Privacy</span>
+          <span className="footer-dot">•</span>
+          <span className="help-link"><HelpCircle size={10} /> Support</span>
+        </div>
+      </footer>
+
       <style>{`
         /* Container page with grid graph paper styling */
         .auth-container {
           min-height: 100vh;
           width: 100%;
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          background-color: #1e1e24;
+          background-color: #121214;
           background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-          background-size: 32px 32px;
-          padding: 1.5rem;
+            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+          background-size: 30px 30px;
+          padding: 3rem 1.5rem;
           position: relative;
           font-family: 'Space Mono', 'Plus Jakarta Sans', monospace;
           overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        /* Ambient Cursor Glow */
+        .mouse-glow {
+          position: absolute;
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(129, 140, 248, 0.07) 0%, transparent 70%);
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+          z-index: 2;
+        }
+
+        /* Top Announcement Badge */
+        .top-badge {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background-color: #1c1c1f;
+          border: 2px solid #f4f4f7;
+          border-radius: 30px;
+          font-size: 11px;
+          font-weight: 700;
+          color: #f4f4f7;
+          box-shadow: 3px 3px 0px #f4f4f7;
+          margin-bottom: 2.5rem;
+          z-index: 10;
+          pointer-events: none;
+          letter-spacing: 0.5px;
+        }
+
+        .top-badge .sparkle {
+          animation: spin 3s infinite linear;
+        }
+
+        .top-badge .divider-dot {
+          color: #71717a;
+        }
+
+        .top-badge .badge-tech {
+          color: #818cf8;
         }
 
         /* Floating background assignment/doodle items */
         .bg-doodle {
           position: absolute;
-          color: rgba(255, 255, 255, 0.06);
+          color: rgba(255, 255, 255, 0.035);
           pointer-events: none;
           z-index: 1;
-          animation: floatDoodle 6s infinite ease-in-out;
+          animation: floatDoodle 8s infinite ease-in-out;
         }
 
-        .bg-doodle-1 { top: 8%; left: 8%; width: 70px; height: 70px; transform: rotate(-12deg); animation-delay: 0.2s; }
-        .bg-doodle-2 { top: 12%; right: 8%; width: 140px; height: 50px; transform: rotate(15deg); animation-delay: 1.5s; }
-        .bg-doodle-3 { bottom: 8%; left: 10%; width: 80px; height: 80px; transform: rotate(20deg); animation-delay: 0.8s; }
-        .bg-doodle-4 { bottom: 15%; right: 7%; width: 70px; height: 70px; transform: rotate(-35deg); animation-delay: 2.2s; }
-        .bg-doodle-5 { top: 45%; left: 5%; width: 85px; height: 85px; transform: rotate(8deg); animation-delay: 1.1s; }
+        .bg-doodle-1 { top: 12%; left: 8%; width: 70px; height: 70px; transform: rotate(-12deg); animation-delay: 0.2s; }
+        .bg-doodle-2 { top: 15%; right: 8%; width: 140px; height: 50px; transform: rotate(15deg); animation-delay: 1.5s; }
+        .bg-doodle-3 { bottom: 12%; left: 10%; width: 80px; height: 80px; transform: rotate(20deg); animation-delay: 0.8s; }
+        .bg-doodle-4 { bottom: 18%; right: 8%; width: 70px; height: 70px; transform: rotate(-35deg); animation-delay: 2.2s; }
+        .bg-doodle-5 { top: 45%; left: 4%; width: 85px; height: 85px; transform: rotate(8deg); animation-delay: 1.1s; }
         .bg-doodle-6 { bottom: 42%; right: 4%; width: 50px; height: 100px; transform: rotate(-10deg); animation-delay: 2.8s; }
-        .bg-doodle-7 { bottom: 8%; left: 45%; width: 75px; height: 75px; transform: rotate(-5deg); animation-delay: 1.9s; }
+        .bg-doodle-7 { bottom: 10%; left: 45%; width: 75px; height: 75px; transform: rotate(-5deg); animation-delay: 1.9s; }
 
         @keyframes floatDoodle {
           0%, 100% { transform: translateY(0) rotate(var(--rot-base, 0deg)); }
-          50% { transform: translateY(-8px) rotate(var(--rot-base, 0deg)); }
+          50% { transform: translateY(-10px) rotate(var(--rot-base, 0deg)); }
         }
 
         /* Scoped adjustments to inject rotation parameters for keys */
@@ -268,6 +352,7 @@ export default function Auth() {
           align-items: center;
           gap: 1.25rem;
           z-index: 10;
+          margin-bottom: 2.5rem;
         }
 
         .auth-error-uiverse {
@@ -439,6 +524,43 @@ export default function Auth() {
         .oauthButton:hover .auth-spinner {
           border-color: rgba(255, 255, 255, 0.2);
           border-top-color: #ffffff;
+        }
+
+        /* Professional SaaS Footer */
+        .auth-footer-saas {
+          z-index: 10;
+          text-align: center;
+          pointer-events: none;
+        }
+
+        .auth-footer-saas p {
+          font-size: 11px;
+          color: #71717a;
+          font-weight: 600;
+          margin-bottom: 0.35rem;
+        }
+
+        .footer-links {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 10px;
+          color: #a1a1aa;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+        }
+
+        .footer-dot {
+          color: #71717a;
+        }
+
+        .help-link {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: #818cf8;
         }
 
         @keyframes spin {
