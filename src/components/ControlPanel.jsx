@@ -49,6 +49,38 @@ export default function ControlPanel({
       </div>
 
       <div className="control-sections">
+        {/* Student & Page Info */}
+        <div className="control-section">
+          <h4 className="section-title">📝 Student & Page Info</h4>
+          <div className="input-group-brutalist">
+            <label>Student Name</label>
+            <input
+              type="text"
+              value={settings.studentName || ''}
+              onChange={(e) => updateSetting('studentName', e.target.value)}
+              placeholder="e.g. Khushboo"
+            />
+          </div>
+          <div className="input-group-brutalist">
+            <label>Roll Number</label>
+            <input
+              type="text"
+              value={settings.rollNo || ''}
+              onChange={(e) => updateSetting('rollNo', e.target.value)}
+              placeholder="e.g. 2401730080"
+            />
+          </div>
+          <div className="input-group-brutalist">
+            <label>Assignment Title</label>
+            <input
+              type="text"
+              value={settings.assignmentTitle || ''}
+              onChange={(e) => updateSetting('assignmentTitle', e.target.value)}
+              placeholder="e.g. Assignment - 03"
+            />
+          </div>
+        </div>
+
         {/* Paper Style Selection */}
         <div className="control-section">
           <h4 className="section-title"><Layout size={14} /> Paper Style</h4>
@@ -256,6 +288,40 @@ export default function ControlPanel({
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
+        }
+
+        .input-group-brutalist {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+          margin-bottom: 0.25rem;
+          text-align: left;
+        }
+
+        .input-group-brutalist label {
+          font-size: 0.65rem;
+          font-weight: 800;
+          color: var(--text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .input-group-brutalist input {
+          padding: 0.4rem 0.6rem;
+          background-color: var(--bg-primary);
+          border: 2px solid var(--text-primary);
+          border-radius: var(--radius-sm);
+          color: var(--text-primary);
+          font-family: inherit;
+          font-size: 0.8rem;
+          font-weight: 700;
+          outline: none;
+          box-shadow: 2px 2px 0px var(--text-primary);
+          transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .input-group-brutalist input:focus {
+          border-color: var(--accent-color);
         }
 
         .section-title {

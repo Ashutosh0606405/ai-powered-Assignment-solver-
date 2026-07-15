@@ -23,7 +23,8 @@ export default function DocumentViewer({
     if (!solutionText) return [];
 
     const lines = solutionText.split('\n');
-    const linesPerPage = 22;
+    // Align with dynamic notebook spacing
+    const linesPerPage = 20; 
     const pages = [];
     let currentLines = [];
 
@@ -98,9 +99,31 @@ export default function DocumentViewer({
               style={{
                 fontSize: `${settings.fontSize}px`,
                 lineHeight: settings.lineHeight,
-                paddingLeft: settings.paperStyle === 'lined' ? '90px' : '60px'
+                paddingTop: '35px',
+                paddingLeft: settings.paperStyle === 'lined' ? '90px' : '60px',
+                '--line-height-px': `${settings.fontSize * settings.lineHeight}px`,
+                '--paper-padding-top': '135px'
               }}
             >
+              {/* Top Notebook Header Block */}
+              <div className="notebook-header-block">
+                <div className="header-box-left">
+                  <div>Nome: <span className="handwritten-val">{settings.studentName || 'Khushboo'}</span></div>
+                  <div>Roll no: <span className="handwritten-val">{settings.rollNo || '2401730080'}</span></div>
+                </div>
+                <div className="header-box-right">
+                  <div>Date: <span className="handwritten-val">__/__/____</span></div>
+                  <div>Page: <span className="handwritten-val">{String(pageIdx + 1).padStart(2, '0')}</span></div>
+                </div>
+              </div>
+
+              {/* Assignment Title (Only on page 1) */}
+              {pageIdx === 0 && settings.assignmentTitle && (
+                <div className="notebook-assignment-title">
+                  {settings.assignmentTitle}
+                </div>
+              )}
+
               <div className="page-number no-print">Page {pageIdx + 1}</div>
 
               <div className="handwritten-content">
@@ -196,6 +219,64 @@ export default function DocumentViewer({
 
         .blank-line {
           width: 100%;
+        }
+
+        .notebook-header-block {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 20px;
+          border-bottom: 2px solid rgba(231, 76, 60, 0.45); /* Red horizontal margin line */
+          padding-bottom: 12px;
+          font-family: inherit;
+          box-sizing: border-box;
+          z-index: 10;
+          position: relative;
+        }
+
+        .header-box-left {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          border: 1.5px solid currentColor;
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 0.75em;
+          min-width: 200px;
+          text-align: left;
+          font-weight: 700;
+          box-sizing: border-box;
+        }
+
+        .header-box-right {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          border: 1.5px solid currentColor;
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 0.75em;
+          min-width: 130px;
+          text-align: left;
+          font-weight: 700;
+          box-sizing: border-box;
+        }
+
+        .handwritten-val {
+          font-weight: normal;
+          padding-left: 6px;
+        }
+
+        .notebook-assignment-title {
+          text-align: center;
+          font-size: 1.15em;
+          font-weight: bold;
+          margin-top: 10px;
+          margin-bottom: 30px;
+          text-decoration: underline;
+          width: 100%;
+          position: relative;
+          z-index: 5;
         }
 
         .inline-editor-card {

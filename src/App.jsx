@@ -44,7 +44,10 @@ function App() {
     lineHeight: 1.6,
     wordSpacing: 0.28,
     rotationJitter: 1.5,
-    verticalJitter: 1.0
+    verticalJitter: 1.0,
+    studentName: 'Khushboo',
+    rollNo: '2401730080',
+    assignmentTitle: 'Assignment - 03'
   });
 
   // Track Firebase/Mock Authentication State

@@ -156,20 +156,21 @@ body {
   margin-bottom: 2rem;
 }
 
-/* Lined Paper style */
+/* Lined Paper style with dynamic line scaling and matching offsets */
 .notebook-page.paper-lined {
   background-image: 
     /* Horizontal blue lines */
     linear-gradient(rgba(174, 214, 241, 0.8) 1px, transparent 1px);
-  background-size: 100% 32px; /* Line heights */
+  background-size: 100% var(--line-height-px, 32px);
+  background-position: 0 var(--paper-padding-top, 135px);
   background-attachment: local;
 }
 
-/* Red Vertical Margin Line */
+/* Red Vertical Margin Line - starts exactly below the horizontal header margin */
 .notebook-page.paper-lined::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: var(--paper-padding-top, 135px);
   left: 75px; /* Vertical line spacing */
   bottom: 0;
   width: 2px;
@@ -315,7 +316,7 @@ body {
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
-    padding: 60px 40px 40px 60px !important; /* Standard print margins */
+    padding: 35px 60px 60px 90px !important; /* Keep original notebook padding margins for header alignment */
     width: 100% !important;
     min-height: auto !important;
     page-break-after: always;
