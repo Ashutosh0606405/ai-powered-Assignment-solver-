@@ -27,7 +27,7 @@ export default function Sidebar({
     <aside className="sidebar-container no-print">
       {/* Brand Logo */}
       <div className="sidebar-brand">
-        <img src="/favicon.svg" alt="ScribeAI Logo" className="brand-logo-img" />
+        <img src="/favicon.png" alt="ScribeAI Logo" className="brand-logo-img" />
         <h2>ScribeAI</h2>
       </div>
 
