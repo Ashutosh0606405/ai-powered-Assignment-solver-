@@ -4,6 +4,7 @@ import UploadZone from './components/UploadZone';
 import ControlPanel from './components/ControlPanel';
 import DocumentViewer from './components/DocumentViewer';
 import ImageToPdfConverter from './components/ImageToPdfConverter';
+import PdfEditor from './components/PdfEditor';
 import Auth from './components/Auth';
 import { solveAssignment } from './utils/gemini';
 import { auth, db, isMock } from './firebase';
@@ -254,9 +255,14 @@ function App() {
           </div>
         )}
 
-        {/* Image to PDF Tab */}
-        {activeTab === 'image-to-pdf' && (
+        {/* PDF Generator Tab */}
+        {activeTab === 'pdf-generator' && (
           <ImageToPdfConverter />
+        )}
+
+        {/* PDF Editor Tab */}
+        {activeTab === 'pdf-editor' && (
+          <PdfEditor />
         )}
       </main>
 

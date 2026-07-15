@@ -1,4 +1,4 @@
-import { BookOpen, Images, Moon, Sun, LogOut, User } from 'lucide-react';
+import { BookOpen, Images, Scissors, Moon, Sun, LogOut, User } from 'lucide-react';
 
 export default function Sidebar({ 
   activeTab, 
@@ -10,7 +10,8 @@ export default function Sidebar({
 }) {
   const menuItems = [
     { id: 'workspace', label: 'Workspace', icon: BookOpen },
-    { id: 'image-to-pdf', label: 'Image to PDF', icon: Images },
+    { id: 'pdf-generator', label: 'PDF Generator', icon: Images },
+    { id: 'pdf-editor', label: 'PDF Editor', icon: Scissors },
   ];
 
   const handleSignOut = async () => {

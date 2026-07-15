@@ -317,14 +317,17 @@ body {
     display: none !important;
   }
 
-  /* Hide workspace elements when printing under Image to PDF tab */
-  .tab-image-to-pdf .notebook-page,
-  .tab-image-to-pdf .inline-editor-card {
+  /* Hide workspace elements when printing under PDF Generator or PDF Editor tabs */
+  .tab-pdf-generator .notebook-page,
+  .tab-pdf-generator .inline-editor-card,
+  .tab-pdf-editor .notebook-page,
+  .tab-pdf-editor .inline-editor-card {
     display: none !important;
   }
   
-  /* Hide image compiler pages when printing under Workspace tab */
-  .tab-workspace .image-pdf-print-container {
+  /* Hide image compiler pages when printing under Workspace or PDF Editor tabs */
+  .tab-workspace .image-pdf-print-container,
+  .tab-pdf-editor .image-pdf-print-container {
     display: none !important;
   }
 }
