@@ -164,7 +164,8 @@ export default function ImageToPdfConverter() {
       }
 
       setCompileProgress("Saving PDF file...");
-      doc.save('compiled_homework_assignment.pdf');
+      const uniqueId = Math.floor(100000 + Math.random() * 900000);
+      doc.save(`new_pdf_${uniqueId}.pdf`);
     } catch (e) {
       console.error(e);
       alert("An error occurred during PDF compilation.");
