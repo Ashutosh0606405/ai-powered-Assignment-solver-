@@ -110,8 +110,8 @@ export default function DocumentViewer({
             {/* Top Notebook Header Block */}
             <div className="notebook-header-block">
               <div className="header-box-left">
-                <div>Nome: <span className="handwritten-val">{settings.studentName || 'Khushboo'}</span></div>
-                <div>Roll no: <span className="handwritten-val">{settings.rollNo || '2401730080'}</span></div>
+                <div>Nome: <span className="handwritten-val">{settings.studentName || ''}</span></div>
+                <div>Roll no: <span className="handwritten-val">{settings.rollNo || ''}</span></div>
               </div>
               <div className="header-box-right">
                 <div>Date: <span className="handwritten-val">__/__/____</span></div>
