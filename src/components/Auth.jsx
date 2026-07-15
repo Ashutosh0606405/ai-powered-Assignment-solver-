@@ -99,8 +99,54 @@ export default function Auth() {
 
   return (
     <div className="auth-container">
+      {/* 1. Document Checklist Doodle */}
+      <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-1" fill="none" stroke="currentColor">
+        <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5" />
+        <path d="M9 11l2 2 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M7 17h10M7 7h10" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+
+      {/* 2. Math Formula Doodle (a² + b² = c²) */}
+      <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-2">
+        <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">a² + b² = c²</text>
+        <path d="M5 32h110" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3,3" />
+      </svg>
+
+      {/* 3. Drawing Triangle Ruler Doodle */}
+      <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-3" fill="none" stroke="currentColor">
+        <path d="M5 3v18h18L5 3z" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M7 7h2M7 10h4M7 13h2M7 16h6M7 19h2" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+
+      {/* 4. Pencil Sketching Doodle */}
+      <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-4" fill="none" stroke="currentColor">
+        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M15 5l4 4M9 11l4 4" strokeWidth="1.5" />
+      </svg>
+
+      {/* 5. Graduation Cap / Academic Degree Doodle */}
+      <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-5" fill="none" stroke="currentColor">
+        <path d="M22 10L12 5 2 10l10 5 10-5z" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M20 10v6l-2 1" strokeWidth="1.5" />
+      </svg>
+
+      {/* 6. Calculus Integral Doodle */}
+      <svg viewBox="0 0 40 80" className="bg-doodle bg-doodle-6">
+        <path d="M25 10c-5 0-7 3-7 8v44c0 5 2 8 7 8" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <text x="5" y="45" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">f(x)dx</text>
+      </svg>
+
+      {/* 7. Analytics Progress Graph Doodle */}
+      <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-7" fill="none" stroke="currentColor">
+        <path d="M3 3v18h18" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18 5L12 11L8 8L3 15" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="18" cy="5" r="1.5" fill="currentColor" />
+        <circle cx="12" cy="11" r="1.5" fill="currentColor" />
+        <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+      </svg>
+
       <div className="uiverse-wrapper">
-        
         {error && (
           <div className="auth-error-uiverse">
             <AlertCircle size={16} className="error-icon" />
@@ -167,7 +213,7 @@ export default function Auth() {
       </div>
 
       <style>{`
-        /* Container page */
+        /* Container page with grid graph paper styling */
         .auth-container {
           min-height: 100vh;
           width: 100%;
@@ -175,10 +221,46 @@ export default function Auth() {
           align-items: center;
           justify-content: center;
           background-color: #1e1e24;
+          background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+          background-size: 32px 32px;
           padding: 1.5rem;
           position: relative;
           font-family: 'Space Mono', 'Plus Jakarta Sans', monospace;
+          overflow: hidden;
         }
+
+        /* Floating background assignment/doodle items */
+        .bg-doodle {
+          position: absolute;
+          color: rgba(255, 255, 255, 0.06);
+          pointer-events: none;
+          z-index: 1;
+          animation: floatDoodle 6s infinite ease-in-out;
+        }
+
+        .bg-doodle-1 { top: 8%; left: 8%; width: 70px; height: 70px; transform: rotate(-12deg); animation-delay: 0.2s; }
+        .bg-doodle-2 { top: 12%; right: 8%; width: 140px; height: 50px; transform: rotate(15deg); animation-delay: 1.5s; }
+        .bg-doodle-3 { bottom: 8%; left: 10%; width: 80px; height: 80px; transform: rotate(20deg); animation-delay: 0.8s; }
+        .bg-doodle-4 { bottom: 15%; right: 7%; width: 70px; height: 70px; transform: rotate(-35deg); animation-delay: 2.2s; }
+        .bg-doodle-5 { top: 45%; left: 5%; width: 85px; height: 85px; transform: rotate(8deg); animation-delay: 1.1s; }
+        .bg-doodle-6 { bottom: 42%; right: 4%; width: 50px; height: 100px; transform: rotate(-10deg); animation-delay: 2.8s; }
+        .bg-doodle-7 { bottom: 8%; left: 45%; width: 75px; height: 75px; transform: rotate(-5deg); animation-delay: 1.9s; }
+
+        @keyframes floatDoodle {
+          0%, 100% { transform: translateY(0) rotate(var(--rot-base, 0deg)); }
+          50% { transform: translateY(-8px) rotate(var(--rot-base, 0deg)); }
+        }
+
+        /* Scoped adjustments to inject rotation parameters for keys */
+        .bg-doodle-1 { --rot-base: -12deg; }
+        .bg-doodle-2 { --rot-base: 15deg; }
+        .bg-doodle-3 { --rot-base: 20deg; }
+        .bg-doodle-4 { --rot-base: -35deg; }
+        .bg-doodle-5 { --rot-base: 8deg; }
+        .bg-doodle-6 { --rot-base: -10deg; }
+        .bg-doodle-7 { --rot-base: -5deg; }
 
         .uiverse-wrapper {
           display: flex;
