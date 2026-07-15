@@ -73,7 +73,7 @@ export default function ImageToPdfConverter() {
 
   return (
     <div className="converter-workspace">
-      <div className="converter-card glass-panel">
+      <div className="converter-card glass-panel no-print">
         <div className="converter-header">
           <div className="icon-badge">
             <FileImage size={24} />
@@ -495,6 +495,10 @@ export default function ImageToPdfConverter() {
           font-size: 0.8rem;
           color: var(--text-secondary);
           max-width: 320px;
+        }
+
+        .image-pdf-print-container {
+          display: none;
         }
 
         /* Print formatting styles */
