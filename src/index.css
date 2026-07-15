@@ -299,6 +299,8 @@ body {
   
   .app-container,
   .main-content,
+  .workspace-layout,
+  .workspace-middle,
   .notebook-container {
     padding: 0 !important;
     margin: 0 !important;
