@@ -28,7 +28,6 @@ export default function Sidebar({
       {/* Brand Logo */}
       <div className="sidebar-brand">
         <img src="/favicon.png" alt="ScribeAI Logo" className="brand-logo-img" />
-        <h2>ScribeAI</h2>
       </div>
 
       {/* Nav Menu */}
@@ -90,19 +89,31 @@ export default function Sidebar({
 
         .sidebar-brand {
           display: flex;
+          justify-content: center;
           align-items: center;
-          gap: 0.75rem;
+          margin-top: 0.5rem;
           margin-bottom: 2.5rem;
-          padding-left: 0.5rem;
+          width: 100%;
         }
 
         .brand-logo-img {
-          width: 40px;
-          height: 40px;
+          width: 56px;
+          height: 56px;
           object-fit: cover;
-          object-position: center 25%; /* Crop to focus on the blue pen brain, hiding the bottom text */
-          border-radius: 50%; /* Smooth all corners into a perfect circle */
+          object-position: center 25%; /* Focus on the graphic pen emblem, hiding the text */
+          border-radius: 50%;
+          border: 2.5px solid var(--text-primary);
+          box-shadow: 3px 3px 0px var(--text-primary);
+          background-color: #ffffff; /* White background to pop the blue elements */
+          padding: 2px;
+          box-sizing: border-box;
           flex-shrink: 0;
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .brand-logo-img:hover {
+          transform: scale(1.05) rotate(5deg);
+          box-shadow: 4px 4px 0px var(--text-primary);
         }
 
         .sidebar-brand h2 {
