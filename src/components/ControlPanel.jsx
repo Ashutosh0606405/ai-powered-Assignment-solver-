@@ -1,11 +1,12 @@
 import React from 'react';
-import { Type, Paintbrush, Sliders, Layout, Printer } from 'lucide-react';
+import { Type, Paintbrush, Sliders, Layout, Printer, ChevronRight } from 'lucide-react';
 
 export default function ControlPanel({ 
   settings, 
   setSettings, 
   onPrint, 
-  hasContent 
+  hasContent,
+  onCollapse 
 }) {
   const paperOptions = [
     { id: 'lined', label: 'Lined' },
@@ -37,9 +38,14 @@ export default function ControlPanel({
 
   return (
     <div className="control-panel-container glass-panel no-print">
-      <div className="panel-header">
-        <h3>2. Document Customizer</h3>
-        <p className="subtitle">Tune layout variables for authentic-looking handwriting.</p>
+      <div className="panel-header-row">
+        <div className="panel-header">
+          <h3>2. Customizer</h3>
+          <p className="subtitle font-ui">Tune variables for handwriting.</p>
+        </div>
+        <button className="collapse-btn-brutalist" onClick={onCollapse} title="Hide Customizer">
+          <ChevronRight size={16} />
+        </button>
       </div>
 
       <div className="control-sections">
@@ -186,26 +192,58 @@ export default function ControlPanel({
 
       <style>{`
         .control-panel-container {
-          padding: 1.5rem;
+          padding: 1.25rem;
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1rem;
           height: fit-content;
           box-sizing: border-box;
         }
 
-        .control-panel-container h3 {
+        .panel-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 2px solid var(--text-primary);
+          padding-bottom: 0.5rem;
+        }
+
+        .panel-header h3 {
           font-size: 1.05rem;
           font-weight: 700;
           color: var(--text-primary);
-          margin-bottom: 0.25rem;
+          margin-bottom: 0.15rem;
           text-align: left;
         }
 
-        .control-panel-container .subtitle {
-          font-size: 0.8rem;
+        .panel-header .subtitle {
+          font-size: 0.75rem;
           color: var(--text-secondary);
           text-align: left;
+        }
+
+        .collapse-btn-brutalist {
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
+          cursor: pointer;
+          padding: 0.35rem;
+          border-radius: var(--radius-sm);
+          box-shadow: 2px 2px 0px var(--text-primary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .collapse-btn-brutalist:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+        }
+
+        .collapse-btn-brutalist:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .control-sections {

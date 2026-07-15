@@ -9,7 +9,7 @@ import Auth from './components/Auth';
 import { solveAssignment } from './utils/gemini';
 import { auth, db, isMock } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { Info } from 'lucide-react';
+import { Info, ChevronRight, Sliders, UploadCloud } from 'lucide-react';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,6 +31,10 @@ function App() {
   // Output state
   const [solutionText, setSolutionText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Panel collapse states
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
 
   // Document customizer settings
   const [settings, setSettings] = useState({
@@ -157,7 +161,7 @@ function App() {
               {activeTab === 'history' && 'Homework History'}
               {activeTab === 'settings' && 'Configuration'}
             </h1>
-            <p className="subtitle-header">
+            <p className="subtitle-header font-ui">
               {activeTab === 'workspace' && 'Convert questions into elegant hand-written worksheets.'}
               {activeTab === 'history' && 'Browse, search, and reload previously solved homework assignments.'}
               {activeTab === 'settings' && 'Configure database storage parameters and keys.'}
@@ -181,7 +185,7 @@ function App() {
         {/* Workspace tab */}
         {activeTab === 'workspace' && (
           <div className="workspace-layout">
-            <div className="workspace-left no-print">
+            <div className={`workspace-left no-print ${isLeftCollapsed ? 'collapsed' : ''}`}>
               <UploadZone 
                 onSolve={handleSolve} 
                 isLoading={isLoading} 
@@ -189,6 +193,7 @@ function App() {
                 setSelectedFile={setSelectedFile} 
                 textPrompt={textPrompt} 
                 setTextPrompt={setTextPrompt} 
+                onCollapse={() => setIsLeftCollapsed(true)}
               />
               
               <div className="features-info-card glass-panel">
@@ -203,19 +208,44 @@ function App() {
             </div>
 
             <div className="workspace-middle">
+              {/* Expand Left Panel Button Overlay */}
+              {isLeftCollapsed && (
+                <button 
+                  className="floating-expand-btn left-expand no-print" 
+                  onClick={() => setIsLeftCollapsed(false)}
+                  title="Show Inputs Panel"
+                >
+                  <UploadCloud size={14} />
+                  <span>Inputs</span>
+                </button>
+              )}
+
               <DocumentViewer 
                 solutionText={solutionText} 
                 settings={settings} 
                 onTextEdit={setSolutionText} 
               />
+
+              {/* Expand Right Panel Button Overlay */}
+              {isRightCollapsed && (
+                <button 
+                  className="floating-expand-btn right-expand no-print" 
+                  onClick={() => setIsRightCollapsed(false)}
+                  title="Show Customizer Panel"
+                >
+                  <Sliders size={14} />
+                  <span>Customize</span>
+                </button>
+              )}
             </div>
 
-            <div className="workspace-right no-print">
+            <div className={`workspace-right no-print ${isRightCollapsed ? 'collapsed' : ''}`}>
               <ControlPanel 
                 settings={settings} 
                 setSettings={setSettings} 
                 onPrint={handlePrint} 
                 hasContent={!!solutionText} 
+                onCollapse={() => setIsRightCollapsed(true)}
               />
             </div>
           </div>
@@ -247,7 +277,7 @@ function App() {
           align-items: center;
           padding: 1.5rem 2rem;
           background-color: var(--bg-secondary);
-          border-bottom: 1px solid var(--border-color);
+          border-bottom: 2px solid var(--text-primary);
           position: sticky;
           top: 0;
           z-index: 10;
@@ -329,6 +359,7 @@ function App() {
           flex: 1;
           height: calc(100vh - 73px); /* Subtract header height */
           overflow: hidden;
+          position: relative;
         }
 
         .workspace-left {
@@ -338,8 +369,20 @@ function App() {
           flex-direction: column;
           gap: 1rem;
           overflow-y: auto;
-          border-right: 1px solid var(--border-color);
+          border-right: 2px solid var(--text-primary);
           background-color: var(--bg-primary);
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-right 0.2s;
+          opacity: 1;
+          flex-shrink: 0;
+        }
+
+        .workspace-left.collapsed {
+          width: 0;
+          padding: 0;
+          opacity: 0;
+          border-right: none;
+          pointer-events: none;
+          overflow: hidden;
         }
 
         .workspace-middle {
@@ -347,14 +390,66 @@ function App() {
           display: flex;
           overflow-y: auto;
           background-color: var(--bg-primary);
+          position: relative;
         }
 
         .workspace-right {
           width: 320px;
           padding: 1.5rem;
           overflow-y: auto;
-          border-left: 1px solid var(--border-color);
+          border-left: 2px solid var(--text-primary);
           background-color: var(--bg-primary);
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-left 0.2s;
+          opacity: 1;
+          flex-shrink: 0;
+        }
+
+        .workspace-right.collapsed {
+          width: 0;
+          padding: 0;
+          opacity: 0;
+          border-left: none;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        /* Floating Expand Buttons */
+        .floating-expand-btn {
+          position: absolute;
+          top: 1.5rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.8rem;
+          background-color: var(--bg-secondary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
+          border-radius: var(--radius-sm);
+          font-family: inherit;
+          font-size: 0.75rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 3px 3px 0px var(--text-primary);
+          z-index: 50;
+        }
+
+        .floating-expand-btn:hover {
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px var(--text-primary);
+        }
+
+        .floating-expand-btn:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
+        }
+
+        .left-expand {
+          left: 1.5rem;
+        }
+
+        .right-expand {
+          right: 1.5rem;
         }
 
         /* Help Info Card */

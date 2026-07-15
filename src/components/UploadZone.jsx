@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud, FileText, X, ArrowRight } from 'lucide-react';
+import { UploadCloud, FileText, X, ArrowRight, ChevronLeft } from 'lucide-react';
 import { fileToBase64 } from '../utils/gemini';
 
 export default function UploadZone({ 
@@ -8,7 +8,8 @@ export default function UploadZone({
   selectedFile, 
   setSelectedFile, 
   textPrompt, 
-  setTextPrompt 
+  setTextPrompt,
+  onCollapse
 }) {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
@@ -91,9 +92,14 @@ export default function UploadZone({
 
   return (
     <div className="upload-zone-container glass-panel">
-      <div className="upload-header">
-        <h3>1. Input Your Assignment</h3>
-        <p className="subtitle">Upload a photo/PDF of your homework or type it in directly.</p>
+      <div className="upload-header-row">
+        <div className="upload-header">
+          <h3>1. Input Homework</h3>
+          <p className="subtitle">Upload photos or type questions.</p>
+        </div>
+        <button className="collapse-btn-brutalist" onClick={onCollapse} title="Hide Inputs">
+          <ChevronLeft size={16} />
+        </button>
       </div>
 
       <div className="workspace-forms">
@@ -203,23 +209,57 @@ export default function UploadZone({
 
       <style>{`
         .upload-zone-container {
-          padding: 1.5rem;
+          padding: 1.25rem;
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1rem;
           box-sizing: border-box;
+        }
+
+        .upload-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 2px solid var(--text-primary);
+          padding-bottom: 0.5rem;
         }
 
         .upload-header h3 {
           font-size: 1.05rem;
           font-weight: 700;
           color: var(--text-primary);
-          margin-bottom: 0.25rem;
+          margin-bottom: 0.15rem;
+          text-align: left;
         }
 
         .upload-header .subtitle {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           color: var(--text-secondary);
+          text-align: left;
+        }
+
+        .collapse-btn-brutalist {
+          background-color: var(--bg-tertiary);
+          border: 2px solid var(--text-primary);
+          color: var(--text-primary);
+          cursor: pointer;
+          padding: 0.35rem;
+          border-radius: var(--radius-sm);
+          box-shadow: 2px 2px 0px var(--text-primary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .collapse-btn-brutalist:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--text-primary);
+        }
+
+        .collapse-btn-brutalist:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--text-primary);
         }
 
         .workspace-forms {
@@ -473,9 +513,9 @@ export default function UploadZone({
           justify-content: center;
           gap: 0.5rem;
           padding: 0.85rem;
-          background-color: #fbbf24; /* Bright Retro Yellow */
+          background-color: #fbbf24;
           border: 2px solid var(--text-primary);
-          color: #1e1e24; /* High contrast dark text */
+          color: #1e1e24;
           border-radius: var(--radius-sm);
           font-family: inherit;
           font-size: 0.9rem;
