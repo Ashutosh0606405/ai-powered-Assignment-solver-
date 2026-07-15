@@ -58,7 +58,7 @@ export default function ControlPanel({
               type="text"
               value={settings.studentName || ''}
               onChange={(e) => updateSetting('studentName', e.target.value)}
-              placeholder="e.g. Khushboo"
+              placeholder="e.g. Kunal"
             />
           </div>
           <div className="input-group-brutalist">
