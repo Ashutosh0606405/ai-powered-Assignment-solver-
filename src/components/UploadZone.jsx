@@ -82,13 +82,7 @@ export default function UploadZone({
     onSolve();
   };
 
-  const setSampleInput = (type) => {
-    if (type === 'math') {
-      setTextPrompt("Solve the quadratic equation x^2 - 5x + 6 = 0, and show your step-by-step factoring work.");
-    } else if (type === 'history') {
-      setTextPrompt("Write a short essay on the main causes of the French Revolution (1789).");
-    }
-  };
+
 
   return (
     <div className="upload-zone-container glass-panel">
@@ -164,28 +158,7 @@ export default function UploadZone({
           />
         </div>
 
-        {/* Quick Help / Templates */}
-        <div className="samples-container">
-          <span className="samples-label">Try these templates:</span>
-          <div className="samples-btn-group">
-            <button 
-              type="button" 
-              className="sample-btn" 
-              onClick={() => setSampleInput('math')}
-              disabled={isLoading}
-            >
-              📐 Math HW
-            </button>
-            <button 
-              type="button" 
-              className="sample-btn" 
-              onClick={() => setSampleInput('history')}
-              disabled={isLoading}
-            >
-              📜 Essay
-            </button>
-          </div>
-        </div>
+
 
         {/* Solve Trigger Button */}
         <button 
