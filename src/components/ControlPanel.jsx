@@ -15,11 +15,12 @@ export default function ControlPanel({
   ];
 
   const fontOptions = [
-    { id: 'caveat', label: 'Classic Cursive', class: 'font-caveat' },
-    { id: 'indie', label: 'Casual Script', class: 'font-indie' },
-    { id: 'architect', label: 'Neat Print', class: 'font-architect' },
-    { id: 'shadows', label: 'Fine Writing', class: 'font-shadows' },
-    { id: 'reenie', label: 'Quick Cursive', class: 'font-reenie' },
+    { id: 'handlee', label: 'Handlee Script', class: 'font-handlee' },
+    { id: 'gloria', label: 'Gloria Hallelujah', class: 'font-gloria' },
+    { id: 'caveat', label: 'Caveat Cursive', class: 'font-caveat' },
+    { id: 'indie', label: 'Indie Flower', class: 'font-indie' },
+    { id: 'patrick', label: 'Patrick Hand', class: 'font-patrick' },
+    { id: 'kalam', label: 'Kalam Script', class: 'font-kalam' },
   ];
 
   const inkOptions = [
@@ -42,7 +43,7 @@ export default function ControlPanel({
       setSettings((prev) => ({
         ...prev,
         paperStyle: 'grid',
-        fontFamily: 'architect',
+        fontFamily: 'kalam',
         fontSize: 20,
         lineHeight: 1.5,
         wordSpacing: 0.24,

@@ -234,11 +234,12 @@ body {
 }
 
 /* Handwriting Font Classes */
+.font-handlee { font-family: 'Handlee', cursive; }
+.font-gloria { font-family: 'Gloria Hallelujah', cursive; }
 .font-caveat { font-family: 'Caveat', cursive; }
 .font-indie { font-family: 'Indie Flower', cursive; }
-.font-architect { font-family: 'Architects Daughter', cursive; }
-.font-shadows { font-family: 'Shadows Into Light', cursive; }
-.font-reenie { font-family: 'Reenie Beanie', cursive; font-size: 1.3em; }
+.font-patrick { font-family: 'Patrick Hand', cursive; }
+.font-kalam { font-family: 'Kalam', cursive; }
 
 /* Handwriting Ink Colors */
 .ink-blue { color: var(--ink-blue); text-shadow: 0 0 1px rgba(27, 79, 114, 0.1); }
