@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, isMock } from '../firebase';
 import { History, FileText, ChevronRight, Clock, RefreshCw } from 'lucide-react';
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 
 export default function HistoryPanel({ user, onLoadDocument }) {
   const [history, setHistory] = useState([]);
