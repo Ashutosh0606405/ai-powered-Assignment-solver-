@@ -1,5 +1,5 @@
-import React from 'react';
-import { BookOpen, Images, Scissors, LogOut, User } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { BookOpen, Images, Scissors, LogOut, User, Settings } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
@@ -8,11 +8,24 @@ export default function Navbar({
   authInstance,
   isMock
 }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
   const menuItems = [
     { id: 'workspace', label: 'Workspace', icon: BookOpen },
     { id: 'pdf-generator', label: 'PDF Generator', icon: Images },
     { id: 'pdf-editor', label: 'PDF Editor', icon: Scissors },
   ];
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -67,16 +80,29 @@ export default function Navbar({
         )}
 
         {user && (
-          <div className="navbar-profile-badge">
-            <div className="profile-icon">
-              <User size={12} />
-            </div>
-            <div className="profile-details">
-              <span className="user-email-text" title={user.email}>{user.email}</span>
-            </div>
-            <button className="signout-icon-btn" onClick={handleSignOut} title="Sign Out">
-              <LogOut size={14} />
+          <div className="navbar-settings-wrapper" ref={dropdownRef}>
+            <button 
+              className={`navbar-settings-btn ${showDropdown ? 'active' : ''}`}
+              onClick={() => setShowDropdown(!showDropdown)}
+              title="Account & Settings"
+            >
+              <Settings size={15} />
+              <span>Settings</span>
             </button>
+
+            {showDropdown && (
+              <div className="navbar-dropdown-menu glass-panel no-print">
+                <div className="dropdown-user-info">
+                  <span className="info-label">Student Account</span>
+                  <span className="info-email" title={user.email}>{user.email}</span>
+                </div>
+                <div className="dropdown-divider" />
+                <button className="dropdown-action-btn logout-btn" onClick={handleSignOut}>
+                  <LogOut size={14} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -203,48 +229,118 @@ export default function Navbar({
           background-color: currentColor;
         }
 
-        .navbar-profile-badge {
+        /* Settings dropdown wrapper */
+        .navbar-settings-wrapper {
+          position: relative;
+        }
+
+        .navbar-settings-btn {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.3rem 0.6rem;
+          padding: 0.45rem 0.85rem;
           background-color: var(--bg-tertiary);
           border: 2px solid var(--text-primary);
+          color: var(--text-primary);
           border-radius: var(--radius-sm);
-          box-shadow: 2px 2px 0px var(--text-primary);
-          max-width: 180px;
+          font-family: inherit;
+          font-size: 0.8rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 2.5px 2.5px 0px var(--text-primary);
         }
 
-        .profile-icon {
-          background-color: var(--accent-color);
-          color: #ffffff;
-          padding: 0.2rem;
-          border-radius: 3px;
-          border: 1px solid var(--text-primary);
+        .navbar-settings-btn:hover, .navbar-settings-btn.active {
+          transform: translate(-1px, -1px);
+          box-shadow: 3.5px 3.5px 0px var(--text-primary);
+          background-color: var(--bg-secondary);
+        }
+
+        .navbar-settings-btn:active {
+          transform: translate(1.5px, 1.5px);
+          box-shadow: none;
+        }
+
+        /* Brutalist Dropdown menu styles */
+        .navbar-dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 220px;
+          background-color: var(--bg-secondary) !important;
+          border: 2px solid var(--text-primary) !important;
+          border-radius: var(--radius-sm);
+          box-shadow: 4px 4px 0px var(--text-primary);
+          padding: 0.75rem;
           display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          z-index: 200;
+          box-sizing: border-box;
+          text-align: left;
         }
 
-        .user-email-text {
-          font-size: 0.75rem;
+        .dropdown-user-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          padding: 0.25rem 0.4rem;
+        }
+
+        .info-label {
+          font-size: 0.65rem;
+          font-weight: 850;
+          color: var(--text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .info-email {
+          font-size: 0.8rem;
           font-weight: 700;
           color: var(--text-primary);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 90px;
         }
 
-        .signout-icon-btn {
-          background: none;
-          border: none;
-          color: var(--text-secondary);
-          cursor: pointer;
+        .dropdown-divider {
+          height: 2px;
+          background-color: var(--text-primary);
+          margin: 0.25rem 0;
+        }
+
+        .dropdown-action-btn {
           display: flex;
-          padding: 2px;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.6rem;
+          width: 100%;
+          background: none;
+          border: 2px solid transparent;
+          border-radius: 4px;
+          color: var(--text-primary);
+          font-family: inherit;
+          font-size: 0.8rem;
+          font-weight: 800;
+          cursor: pointer;
+          text-align: left;
+          box-sizing: border-box;
+          transition: background-color var(--transition-fast), border-color var(--transition-fast);
         }
 
-        .signout-icon-btn:hover {
+        .dropdown-action-btn:hover {
+          background-color: var(--bg-tertiary);
+          border-color: var(--text-primary);
+        }
+
+        .dropdown-action-btn.logout-btn {
           color: var(--error-color);
+        }
+
+        .dropdown-action-btn.logout-btn:hover {
+          background-color: rgba(248, 113, 113, 0.1);
         }
       `}</style>
     </nav>
