@@ -16,9 +16,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   
   const [activeTab, setActiveTab] = useState('workspace');
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('scribe_theme') || 'dark';
-  });
+  const [theme, setTheme] = useState('dark');
   const [apiKey, setApiKey] = useState(() => {
     return localStorage.getItem('scribe_gemini_api_key') || '';
   });
@@ -382,9 +380,7 @@ function App() {
           justify-content: space-between;
           align-items: center;
           padding: 1.5rem 2rem;
-          background-color: var(--glass-bg) !important;
-          backdrop-filter: blur(var(--glass-blur, 12px));
-          -webkit-backdrop-filter: blur(var(--glass-blur, 12px));
+          background-color: var(--bg-secondary) !important;
           border-bottom: 2px solid var(--text-primary);
           position: sticky;
           top: 0;
@@ -471,9 +467,7 @@ function App() {
           gap: 1rem;
           overflow-y: auto;
           border-right: 2px solid var(--text-primary);
-          background-color: var(--glass-bg) !important;
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+          background-color: var(--bg-secondary) !important;
           transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-right 0.2s;
           opacity: 1;
           flex-shrink: 0;
@@ -501,9 +495,7 @@ function App() {
           padding: 1.5rem;
           overflow-y: auto;
           border-left: 2px solid var(--text-primary);
-          background-color: var(--glass-bg) !important;
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+          background-color: var(--bg-secondary) !important;
           transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-left 0.2s;
           opacity: 1;
           flex-shrink: 0;

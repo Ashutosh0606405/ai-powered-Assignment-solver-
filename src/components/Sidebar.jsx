@@ -64,20 +64,12 @@ export default function Sidebar({
             </button>
           </div>
         )}
-
-        {/* Theme customizer */}
-        <button className="theme-toggle" onClick={toggleTheme} title="Toggle Light/Dark Theme">
-          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-        </button>
       </div>
 
       <style>{`
         .sidebar-container {
           width: 260px;
-          background-color: var(--glass-bg) !important;
-          backdrop-filter: blur(var(--glass-blur, 12px));
-          -webkit-backdrop-filter: blur(var(--glass-blur, 12px));
+          background-color: var(--bg-secondary) !important;
           border-right: 2px solid var(--text-primary);
           display: flex;
           flex-direction: column;

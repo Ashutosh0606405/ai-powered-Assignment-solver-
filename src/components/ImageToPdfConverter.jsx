@@ -381,9 +381,7 @@ export default function ImageToPdfConverter() {
           flex-direction: column;
           gap: 1.25rem;
           padding: 1.5rem;
-          background-color: var(--glass-bg) !important;
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          background-color: var(--bg-secondary) !important;
           height: 100%;
           overflow-y: auto;
           box-sizing: border-box;
