@@ -41,7 +41,7 @@ export default function Navbar({
         <div className="navbar-brand">
           <img 
             className="brand-logo-small" 
-            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=256"
+            src="/favicon.png"
             alt="ScribeAI Logo" 
           />
           <h2>ScribeAI</h2>
