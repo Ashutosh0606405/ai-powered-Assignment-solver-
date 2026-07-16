@@ -382,7 +382,9 @@ function App() {
           justify-content: space-between;
           align-items: center;
           padding: 1.5rem 2rem;
-          background-color: var(--bg-secondary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(var(--glass-blur, 12px));
+          -webkit-backdrop-filter: blur(var(--glass-blur, 12px));
           border-bottom: 2px solid var(--text-primary);
           position: sticky;
           top: 0;
@@ -469,7 +471,9 @@ function App() {
           gap: 1rem;
           overflow-y: auto;
           border-right: 2px solid var(--text-primary);
-          background-color: var(--bg-primary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-right 0.2s;
           opacity: 1;
           flex-shrink: 0;
@@ -488,7 +492,7 @@ function App() {
           flex: 1;
           display: flex;
           overflow-y: auto;
-          background-color: var(--bg-primary);
+          background-color: transparent !important;
           position: relative;
         }
 
@@ -497,7 +501,9 @@ function App() {
           padding: 1.5rem;
           overflow-y: auto;
           border-left: 2px solid var(--text-primary);
-          background-color: var(--bg-primary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-left 0.2s;
           opacity: 1;
           flex-shrink: 0;

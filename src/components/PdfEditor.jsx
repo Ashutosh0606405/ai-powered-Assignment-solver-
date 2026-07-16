@@ -554,7 +554,7 @@ export default function PdfEditor({ apiKey, setSolutionText, setActiveTab }) {
           grid-template-columns: 320px 1fr;
           gap: 2rem;
           padding: 2rem;
-          background-color: var(--bg-primary);
+          background-color: transparent !important;
           overflow: hidden;
           height: calc(100vh - 65px);
           box-sizing: border-box;
@@ -565,7 +565,9 @@ export default function PdfEditor({ apiKey, setSolutionText, setActiveTab }) {
           flex-direction: column;
           gap: 1.25rem;
           padding: 1.5rem;
-          background-color: var(--bg-secondary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           height: 100%;
           overflow-y: auto;
           box-sizing: border-box;

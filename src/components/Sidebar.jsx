@@ -75,7 +75,9 @@ export default function Sidebar({
       <style>{`
         .sidebar-container {
           width: 260px;
-          background-color: var(--bg-secondary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(var(--glass-blur, 12px));
+          -webkit-backdrop-filter: blur(var(--glass-blur, 12px));
           border-right: 2px solid var(--text-primary);
           display: flex;
           flex-direction: column;
@@ -84,6 +86,7 @@ export default function Sidebar({
           position: sticky;
           top: 0;
           box-sizing: border-box;
+          z-index: 10;
         }
 
         .sidebar-brand {

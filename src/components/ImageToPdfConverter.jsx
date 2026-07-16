@@ -369,7 +369,7 @@ export default function ImageToPdfConverter() {
           grid-template-columns: 320px 1fr;
           gap: 2rem;
           padding: 2rem;
-          background-color: var(--bg-primary);
+          background-color: transparent !important;
           overflow: hidden;
           height: calc(100vh - 65px); /* Calculate height below header */
           box-sizing: border-box;
@@ -381,7 +381,9 @@ export default function ImageToPdfConverter() {
           flex-direction: column;
           gap: 1.25rem;
           padding: 1.5rem;
-          background-color: var(--bg-secondary);
+          background-color: var(--glass-bg) !important;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           height: 100%;
           overflow-y: auto;
           box-sizing: border-box;
