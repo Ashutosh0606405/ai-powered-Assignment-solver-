@@ -54,6 +54,17 @@ function App() {
     paddingLeft: 90
   });
 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Mouse move listener to update coordinates for ambient cursor glow
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   // Track Firebase/Mock Authentication State
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -147,6 +158,70 @@ function App() {
 
   return (
     <div className={`app-container tab-${activeTab}`}>
+      {/* Dynamic Cursor Light Overlay */}
+      <div 
+        className="mouse-glow" 
+        style={{ 
+          left: `${mousePos.x}px`, 
+          top: `${mousePos.y}px` 
+        }} 
+      />
+
+      {/* Background Chalk Doodles */}
+      <div className="bg-doodles-wrapper no-print">
+        {/* 1. Document Checklist Doodle */}
+        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-1" fill="none" stroke="currentColor">
+          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5" />
+          <path d="M9 11l2 2 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M7 17h10M7 7h10" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+
+        {/* 2. Math Formula Doodle (a² + b² = c²) */}
+        <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-2">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">a² + b² = c²</text>
+          <path d="M5 32h110" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3,3" />
+        </svg>
+
+        {/* 3. Drawing Triangle Ruler Doodle */}
+        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-3" fill="none" stroke="currentColor">
+          <path d="M5 3v18h18L5 3z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M7 7h2M7 10h4M7 13h2M7 16h6M7 19h2" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+
+        {/* 4. Pencil Sketching Doodle */}
+        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-4" fill="none" stroke="currentColor">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M15 5l4 4M9 11l4 4" strokeWidth="1.5" />
+        </svg>
+
+        {/* 5. Graduation Cap / Academic Degree Doodle */}
+        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-5" fill="none" stroke="currentColor">
+          <path d="M22 10L12 5 2 10l10 5 10-5z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M20 10v6l-2 1" strokeWidth="1.5" />
+        </svg>
+
+        {/* 6. Calculus Integral Doodle */}
+        <svg viewBox="0 0 40 80" className="bg-doodle bg-doodle-6">
+          <path d="M25 10c-5 0-7 3-7 8v44c0 5 2 8 7 8" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <text x="5" y="45" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">f(x)dx</text>
+        </svg>
+
+        {/* 7. Analytics Progress Graph Doodle */}
+        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-7" fill="none" stroke="currentColor">
+          <path d="M3 3v18h18" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M18 5L12 11L8 8L3 15" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="18" cy="5" r="1.5" fill="currentColor" />
+          <circle cx="12" cy="11" r="1.5" fill="currentColor" />
+          <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+        </svg>
+
+        {/* 8. Constant Pi Doodle */}
+        <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-12">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">π ≈ 3.14</text>
+        </svg>
+      </div>
+
       {/* Sidebar navigation */}
       <Sidebar 
         activeTab={activeTab} 
