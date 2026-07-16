@@ -430,13 +430,16 @@ function App() {
           height: calc(100vh - 65px);
           overflow: hidden;
           position: relative;
-          padding: 1.5rem;
-          gap: 1.5rem;
+          padding: 0;
           box-sizing: border-box;
         }
 
         .workspace-left {
-          width: 380px;
+          position: absolute;
+          top: 1.5rem;
+          left: 1.5rem;
+          bottom: 1.5rem;
+          width: 360px;
           padding: 1.5rem;
           display: flex;
           flex-direction: column;
@@ -444,53 +447,55 @@ function App() {
           overflow-y: auto;
           border: 2px solid var(--text-primary) !important;
           border-radius: var(--radius-md) !important;
-          box-shadow: 5px 5px 0px var(--text-primary) !important;
+          box-shadow: 6px 6px 0px var(--text-primary) !important;
           background-color: var(--bg-secondary) !important;
-          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border 0.2s;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
           opacity: 1;
-          flex-shrink: 0;
+          z-index: 80;
+          transform: translateX(0);
         }
 
         .workspace-left.collapsed {
-          width: 0;
-          padding: 0;
+          transform: translateX(-120%);
           opacity: 0;
-          border: none !important;
-          box-shadow: none !important;
           pointer-events: none;
-          overflow: hidden;
         }
 
         .workspace-middle {
-          flex: 1;
+          width: 100%;
+          height: 100%;
           display: flex;
+          justify-content: center;
           overflow-y: auto;
           background-color: transparent !important;
           position: relative;
-          border-radius: var(--radius-md);
+          z-index: 10;
+          padding: 2rem 0;
+          box-sizing: border-box;
         }
 
         .workspace-right {
+          position: absolute;
+          top: 1.5rem;
+          right: 1.5rem;
+          bottom: 1.5rem;
           width: 320px;
           padding: 1.5rem;
           overflow-y: auto;
           border: 2px solid var(--text-primary) !important;
           border-radius: var(--radius-md) !important;
-          box-shadow: 5px 5px 0px var(--text-primary) !important;
+          box-shadow: 6px 6px 0px var(--text-primary) !important;
           background-color: var(--bg-secondary) !important;
-          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border 0.2s;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
           opacity: 1;
-          flex-shrink: 0;
+          z-index: 80;
+          transform: translateX(0);
         }
 
         .workspace-right.collapsed {
-          width: 0;
-          padding: 0;
+          transform: translateX(120%);
           opacity: 0;
-          border: none !important;
-          box-shadow: none !important;
           pointer-events: none;
-          overflow: hidden;
         }
 
         /* Floating Expand Buttons */
