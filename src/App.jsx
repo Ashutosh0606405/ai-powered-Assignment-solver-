@@ -172,23 +172,34 @@ function App() {
 
       {/* Background Chalk Doodles */}
       <div className="bg-doodles-wrapper no-print">
-        {/* 1. Document Checklist Doodle */}
-        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-1" fill="none" stroke="currentColor">
-          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5" />
-          <path d="M9 11l2 2 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M7 17h10M7 7h10" strokeWidth="1.5" strokeLinecap="round" />
+        {/* 1. Right Triangle Math Doodle */}
+        <svg viewBox="0 0 100 80" className="bg-doodle bg-doodle-1" fill="none" stroke="currentColor">
+          <path d="M 20 15 L 20 65 L 80 65 Z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M 20 57 L 28 57 L 28 65" strokeWidth="1" />
+          <path d="M 68 65 A 15 15 0 0 0 73 59" strokeWidth="1" />
+          <text x="63" y="55" fontFamily="'Space Mono', monospace" fontSize="8" fill="currentColor">θ</text>
+          <text x="10" y="43" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">a</text>
+          <text x="48" y="76" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">b</text>
+          <text x="52" y="38" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">c</text>
         </svg>
 
-        {/* 2. Math Formula Doodle (a² + b² = c²) */}
-        <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-2">
-          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">a² + b² = c²</text>
-          <path d="M5 32h110" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3,3" />
+        {/* 2. Trigonometry Identity Formula Doodle */}
+        <svg viewBox="0 0 160 40" className="bg-doodle bg-doodle-2">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="15" fontWeight="bold" fill="currentColor">sin²θ + cos²θ = 1</text>
         </svg>
 
-        {/* 3. Drawing Triangle Ruler Doodle */}
-        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-3" fill="none" stroke="currentColor">
-          <path d="M5 3v18h18L5 3z" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M7 7h2M7 10h4M7 13h2M7 16h6M7 19h2" strokeWidth="1.5" strokeLinecap="round" />
+        {/* 3. Protractor Doodle */}
+        <svg viewBox="0 0 100 60" className="bg-doodle bg-doodle-3" fill="none" stroke="currentColor">
+          <path d="M 10 50 A 40 40 0 0 1 90 50 Z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M 25 50 A 25 25 0 0 1 75 50 Z" strokeWidth="1" />
+          <line x1="50" y1="50" x2="50" y2="44" strokeWidth="1.2" />
+          <line x1="46" y1="50" x2="54" y2="50" strokeWidth="1.2" />
+          <line x1="50" y1="50" x2="18" y2="31" strokeWidth="0.8" strokeDasharray="3,3" />
+          <line x1="50" y1="50" x2="82" y2="31" strokeWidth="0.8" strokeDasharray="3,3" />
+          <line x1="50" y1="50" x2="50" y2="10" strokeWidth="1" />
+          <text x="44" y="8" fontFamily="'Space Mono', monospace" fontSize="7" fill="currentColor">90°</text>
+          <text x="80" y="27" fontFamily="'Space Mono', monospace" fontSize="6" fill="currentColor">30°</text>
+          <text x="12" y="27" fontFamily="'Space Mono', monospace" fontSize="6" fill="currentColor">150°</text>
         </svg>
 
         {/* 4. Pencil Sketching Doodle */}
@@ -197,17 +208,26 @@ function App() {
           <path d="M15 5l4 4M9 11l4 4" strokeWidth="1.5" />
         </svg>
 
-        {/* 5. Graduation Cap / Academic Degree Doodle */}
-        <svg viewBox="0 0 24 24" className="bg-doodle bg-doodle-5" fill="none" stroke="currentColor">
-          <path d="M22 10L12 5 2 10l10 5 10-5z" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M20 10v6l-2 1" strokeWidth="1.5" />
+        {/* 5. Benzene Chemical Structure Doodle */}
+        <svg viewBox="0 0 100 100" className="bg-doodle bg-doodle-5" fill="none" stroke="currentColor">
+          <path d="M 50 18 L 80 35 L 80 70 L 50 87 L 20 70 L 20 35 Z" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M 73 39 L 73 66" strokeWidth="1.2" />
+          <path d="M 47 81 L 26 69" strokeWidth="1.2" />
+          <path d="M 26 36 L 47 24" strokeWidth="1.2" />
+          <line x1="50" y1="18" x2="50" y2="6" strokeWidth="1.5" />
+          <text x="43" y="4" fontFamily="'Space Mono', monospace" fontSize="9" fontWeight="bold" fill="currentColor">OH</text>
         </svg>
 
-        {/* 6. Calculus Integral Doodle */}
-        <svg viewBox="0 0 40 80" className="bg-doodle bg-doodle-6">
-          <path d="M25 10c-5 0-7 3-7 8v44c0 5 2 8 7 8" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <text x="5" y="45" fontFamily="'Space Mono', monospace" fontSize="10" fill="currentColor">f(x)dx</text>
+        {/* 6. Drawing Compass Instrument Doodle */}
+        <svg viewBox="0 0 80 100" className="bg-doodle bg-doodle-6" fill="none" stroke="currentColor">
+          <circle cx="40" cy="15" r="4" strokeWidth="1.5" />
+          <circle cx="40" cy="15" r="1" fill="currentColor" />
+          <line x1="40" y1="15" x2="25" y2="85" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="25" y1="85" x2="24" y2="90" strokeWidth="1" />
+          <line x1="40" y1="15" x2="55" y2="70" strokeWidth="1.5" strokeLinecap="round" />
+          <rect x="52" y="70" width="6" height="12" rx="1" strokeWidth="1.2" />
+          <path d="M 55 82 L 58 92 L 53 92 Z" fill="currentColor" />
+          <path d="M 25 90 A 35 35 0 0 0 54 92" strokeWidth="1.2" strokeDasharray="3,3" />
         </svg>
 
         {/* 7. Analytics Progress Graph Doodle */}
@@ -229,9 +249,11 @@ function App() {
           <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">dy/dx</text>
         </svg>
 
-        {/* 10. Math Limit Doodle (lim n→∞) */}
-        <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-10">
-          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="14" fontWeight="bold" fill="currentColor">lim(n→∞)</text>
+        {/* 10. Quadratic Formula Doodle */}
+        <svg viewBox="0 0 150 45" className="bg-doodle bg-doodle-10">
+          <text x="5" y="20" fontFamily="'Space Mono', monospace" fontSize="12" fontWeight="bold" fill="currentColor">x = -b±√b²-4ac</text>
+          <line x1="5" y1="26" x2="135" y2="26" stroke="currentColor" strokeWidth="1.5" />
+          <text x="60" y="38" fontFamily="'Space Mono', monospace" fontSize="11" fontWeight="bold" fill="currentColor">2a</text>
         </svg>
 
         {/* 11. Math Summation Sigma Doodle */}
@@ -245,9 +267,16 @@ function App() {
           <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">π ≈ 3.14</text>
         </svg>
 
-        {/* 13. Imaginary Unit Doodle (√-1 = i) */}
-        <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-13">
-          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">√-1 = i</text>
+        {/* 13. Water Molecule H2O Chemical Doodle */}
+        <svg viewBox="0 0 80 60" className="bg-doodle bg-doodle-13" fill="none" stroke="currentColor">
+          <circle cx="40" cy="20" r="8" strokeWidth="1.5" />
+          <text x="36" y="24" fontFamily="'Space Mono', monospace" fontSize="10" fontWeight="bold" fill="currentColor">O</text>
+          <circle cx="20" cy="45" r="5" strokeWidth="1.2" />
+          <text x="17" y="49" fontFamily="'Space Mono', monospace" fontSize="8" fontWeight="bold" fill="currentColor">H</text>
+          <circle cx="60" cy="45" r="5" strokeWidth="1.2" />
+          <text x="57" y="49" fontFamily="'Space Mono', monospace" fontSize="8" fontWeight="bold" fill="currentColor">H</text>
+          <line x1="33" y1="26" x2="24" y2="40" strokeWidth="1.5" />
+          <line x1="47" y1="26" x2="56" y2="40" strokeWidth="1.5" />
         </svg>
       </div>
 

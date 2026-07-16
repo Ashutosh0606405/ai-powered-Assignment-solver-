@@ -486,9 +486,9 @@ export default function UploadZone({
           justify-content: center;
           gap: 0.5rem;
           padding: 0.85rem;
-          background-color: #fbbf24;
+          background-color: #ffffff;
           border: 2px solid var(--text-primary);
-          color: #1e1e24;
+          color: #001220;
           border-radius: var(--radius-sm);
           font-family: inherit;
           font-size: 0.9rem;
@@ -503,7 +503,7 @@ export default function UploadZone({
         .solve-workspace-btn:hover:not(:disabled) {
           transform: translate(-1.5px, -1.5px);
           box-shadow: 4.5px 4.5px 0px var(--text-primary);
-          background-color: #f59e0b;
+          background-color: #f1f5f9;
         }
 
         .solve-workspace-btn:active:not(:disabled) {
