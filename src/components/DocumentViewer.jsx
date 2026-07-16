@@ -357,7 +357,7 @@ export default function DocumentViewer({
           flex-direction: column;
           align-items: center;
           padding: 2rem;
-          background-color: var(--bg-primary);
+          background-color: transparent !important;
           overflow-y: auto;
           transition: background-color var(--transition-normal);
         }
