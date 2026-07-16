@@ -135,8 +135,8 @@ export default function Navbar({
         }
 
         .brand-logo-small {
-          width: 32px;
-          height: 32px;
+          width: 40px;
+          height: 40px;
           object-fit: cover;
           border-radius: 50%;
           border: 2px solid var(--text-primary);
