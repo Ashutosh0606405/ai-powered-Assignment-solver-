@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 import UploadZone from './components/UploadZone';
 import ControlPanel from './components/ControlPanel';
 import DocumentViewer from './components/DocumentViewer';
@@ -251,44 +251,17 @@ function App() {
         </svg>
       </div>
 
-      {/* Sidebar navigation */}
-      <Sidebar 
+      {/* Top Navbar */}
+      <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        theme={theme} 
-        toggleTheme={toggleTheme} 
         user={user}
         authInstance={auth}
+        isMock={isMock}
       />
 
       {/* Main Panel content area */}
       <main className="main-content">
-        {/* Top Header bar */}
-        <header className="dashboard-header no-print">
-          <div className="header-left">
-            <h1>
-              {activeTab === 'workspace' && 'Solve Workspace'}
-              {activeTab === 'settings' && 'Configuration'}
-            </h1>
-            <p className="subtitle-header font-ui">
-              {activeTab === 'workspace' && 'Convert questions into elegant hand-written worksheets.'}
-              {activeTab === 'settings' && 'Configure database storage parameters and keys.'}
-            </p>
-          </div>
-          <div className="header-right">
-            {isMock ? (
-              <div className="api-badge warning">
-                <span className="dot"></span>
-                <span>Demo (Mock Solver Active)</span>
-              </div>
-            ) : (
-              <div className="api-badge success">
-                <span className="dot"></span>
-                <span>Gemini API Live</span>
-              </div>
-            )}
-          </div>
-        </header>
 
         {/* Workspace tab */}
         {activeTab === 'workspace' && (
@@ -450,13 +423,16 @@ function App() {
           50% { transform: scale(1.2); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
         }
 
-        /* Workspace Grid Split Layout */
+        /* Workspace Immersive Desk Layout */
         .workspace-layout {
           display: flex;
           flex: 1;
-          height: calc(100vh - 73px); /* Subtract header height */
+          height: calc(100vh - 65px);
           overflow: hidden;
           position: relative;
+          padding: 1.5rem;
+          gap: 1.5rem;
+          box-sizing: border-box;
         }
 
         .workspace-left {
@@ -466,9 +442,11 @@ function App() {
           flex-direction: column;
           gap: 1rem;
           overflow-y: auto;
-          border-right: 2px solid var(--text-primary);
+          border: 2px solid var(--text-primary) !important;
+          border-radius: var(--radius-md) !important;
+          box-shadow: 5px 5px 0px var(--text-primary) !important;
           background-color: var(--bg-secondary) !important;
-          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-right 0.2s;
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border 0.2s;
           opacity: 1;
           flex-shrink: 0;
         }
@@ -477,7 +455,8 @@ function App() {
           width: 0;
           padding: 0;
           opacity: 0;
-          border-right: none;
+          border: none !important;
+          box-shadow: none !important;
           pointer-events: none;
           overflow: hidden;
         }
@@ -488,15 +467,18 @@ function App() {
           overflow-y: auto;
           background-color: transparent !important;
           position: relative;
+          border-radius: var(--radius-md);
         }
 
         .workspace-right {
           width: 320px;
           padding: 1.5rem;
           overflow-y: auto;
-          border-left: 2px solid var(--text-primary);
+          border: 2px solid var(--text-primary) !important;
+          border-radius: var(--radius-md) !important;
+          box-shadow: 5px 5px 0px var(--text-primary) !important;
           background-color: var(--bg-secondary) !important;
-          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border-left 0.2s;
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.2s, opacity 0.15s, border 0.2s;
           opacity: 1;
           flex-shrink: 0;
         }
@@ -505,7 +487,8 @@ function App() {
           width: 0;
           padding: 0;
           opacity: 0;
-          border-left: none;
+          border: none !important;
+          box-shadow: none !important;
           pointer-events: none;
           overflow: hidden;
         }
