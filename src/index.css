@@ -101,6 +101,7 @@ body {
 /* Layout and Grid Components */
 .app-container {
   display: flex;
+  flex-direction: column !important;
   min-height: 100vh;
   position: relative;
   background-color: #0c0c0e !important;
