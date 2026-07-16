@@ -167,6 +167,11 @@ function App() {
         }} 
       />
 
+      {/* Drifting Neon Ambient Glow Blobs */}
+      <div className="ambient-glow-blob blob-indigo no-print" />
+      <div className="ambient-glow-blob blob-violet no-print" />
+      <div className="ambient-glow-blob blob-cyan no-print" />
+
       {/* Background Chalk Doodles */}
       <div className="bg-doodles-wrapper no-print">
         {/* 1. Document Checklist Doodle */}
@@ -216,9 +221,35 @@ function App() {
           <circle cx="8" cy="8" r="1.5" fill="currentColor" />
         </svg>
 
-        {/* 8. Constant Pi Doodle */}
+        {/* 8. Math Variables Doodle (x, y, z) */}
+        <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-8">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="18" fontWeight="bold" fill="currentColor">x, y, z</text>
+        </svg>
+
+        {/* 9. Derivative Math Doodle (dy/dx) */}
+        <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-9">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">dy/dx</text>
+        </svg>
+
+        {/* 10. Math Limit Doodle (lim n→∞) */}
+        <svg viewBox="0 0 120 40" className="bg-doodle bg-doodle-10">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="14" fontWeight="bold" fill="currentColor">lim(n→∞)</text>
+        </svg>
+
+        {/* 11. Math Summation Sigma Doodle */}
+        <svg viewBox="0 0 60 60" className="bg-doodle bg-doodle-11">
+          <text x="5" y="45" fontFamily="'Space Mono', monospace" fontSize="32" fontWeight="bold" fill="currentColor">∑</text>
+          <text x="32" y="30" fontFamily="'Space Mono', monospace" fontSize="12" fontWeight="bold" fill="currentColor">n</text>
+        </svg>
+
+        {/* 12. Constant Pi Doodle */}
         <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-12">
           <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">π ≈ 3.14</text>
+        </svg>
+
+        {/* 13. Imaginary Unit Doodle (√-1 = i) */}
+        <svg viewBox="0 0 100 40" className="bg-doodle bg-doodle-13">
+          <text x="5" y="25" fontFamily="'Space Mono', monospace" fontSize="16" fontWeight="bold" fill="currentColor">√-1 = i</text>
         </svg>
       </div>
 
