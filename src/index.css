@@ -444,16 +444,29 @@ body {
 /* Background Brand Chalk Watermark */
 .bg-brand-watermark {
   position: absolute;
-  top: 48%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-8deg);
   font-family: 'Gloria Hallelujah', 'Handlee', cursive, sans-serif;
-  font-size: 9.5vw;
+  font-size: 13vw;
   font-weight: 900;
   color: rgba(255, 255, 255, 0.16);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   pointer-events: none;
   z-index: 1;
   user-select: none;
   white-space: nowrap;
+  animation: breathingWatermark 12s infinite ease-in-out;
+}
+
+@keyframes breathingWatermark {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.25), 0 0 20px rgba(59, 130, 246, 0.15);
+    opacity: 0.14;
+  }
+  50% {
+    transform: translate(-50%, -46%) rotate(-7deg) scale(1.03);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.45), 0 0 30px rgba(59, 130, 246, 0.35);
+    opacity: 0.22;
+  }
 }
