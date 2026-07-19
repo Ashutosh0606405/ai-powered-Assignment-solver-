@@ -164,7 +164,8 @@ function App() {
           top: `${mousePos.y}px` 
         }} 
       />
-
+      {/* Background Brand Watermark */}
+      <div className="bg-brand-watermark">ScribeAI</div>
       {/* Drifting Neon Ambient Glow Blobs */}
       <div className="ambient-glow-blob blob-indigo no-print" />
       <div className="ambient-glow-blob blob-violet no-print" />

@@ -118,6 +118,9 @@ export default function Auth() {
         }} 
       />
 
+      {/* Background Brand Watermark */}
+      <div className="bg-brand-watermark">ScribeAI</div>
+
       {/* Top Announcement Badge */}
       <div className="top-badge">
         <span className="sparkle">✨</span>
@@ -330,6 +333,22 @@ export default function Auth() {
           font-family: 'Space Mono', 'Plus Jakarta Sans', monospace;
           overflow: hidden;
           box-sizing: border-box;
+        }
+
+        .bg-brand-watermark {
+          position: absolute;
+          top: 48%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-8deg);
+          font-family: 'Gloria Hallelujah', 'Handlee', cursive, sans-serif;
+          font-size: 9.5vw;
+          font-weight: 900;
+          color: rgba(255, 255, 255, 0.16);
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+          pointer-events: none;
+          z-index: 1;
+          user-select: none;
+          white-space: nowrap;
         }
 
         /* Ambient Cursor Glow */
